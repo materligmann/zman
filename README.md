@@ -249,10 +249,14 @@ volée avec les alternates `hreflang`.
   citée exactement : la résolution *décide* l'augmentation de la tolérance
   UT1−UTC en 2035 au plus tard et *demande* une valeur assurant la
   continuité d'UTC pour au moins un siècle.
-- **Licences (proposition, à trancher)** : données sous CC BY 4.0 avec
-  attribution « zman », comme hebcal ; code sous MIT. Aucun fichier
-  `LICENSE` n'est ajouté tant que la décision n'est pas prise ; le site
-  annonce les licences comme « proposées ».
+- **Licences** : code sous MIT (fichier `LICENSE`). Données de l'API :
+  CC BY 4.0 avec attribution « zman » proposée, comme hebcal, pas encore
+  tranchée.
 - **Image Open Graph** : PNG 1200×630 statique, généré par
   `scripts/gen-og.py` avec les polices embarquées (pas de build step).
 - **Dépôt** : https://github.com/materligmann/zman, public.
+
+## Licence
+
+Code sous licence MIT, voir `LICENSE`. Les réponses de l'API sont proposées
+sous CC BY 4.0 (attribution « zman »), en attente de confirmation.
