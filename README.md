@@ -255,5 +255,4 @@ volée avec les alternates `hreflang`.
   annonce les licences comme « proposées ».
 - **Image Open Graph** : PNG 1200×630 statique, généré par
   `scripts/gen-og.py` avec les polices embarquées (pas de build step).
-- **Dépôt** : le lien pointe vers `github.com/materligmann/zman`, à créer
-  (le projet n'est pas encore sous git).
+- **Dépôt** : https://github.com/materligmann/zman, public.
