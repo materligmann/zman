@@ -2,23 +2,62 @@
   "name": "English",
   "dir": "ltr",
   "og_locale": "en_US",
-  "lang_names": {"fr": "FR", "en": "EN", "he": "עב"},
-  "titles": {"index": "The clock", "manifeste": "Manifesto", "api": "API documentation", "methode": "Method"},
+  "lang_names": {
+    "fr": "FR",
+    "en": "EN",
+    "he": "עב"
+  },
+  "titles": {
+    "index": "The clock",
+    "manifeste": "Manifesto",
+    "api": "API documentation",
+    "methode": "Method"
+  },
   "descriptions": {
     "index": "The present moment in Jewish time: Hebrew date, hour, chelek, rega, and the number of rega’im elapsed since the epoch. Reference: the Earth’s rotation (UT1).",
     "manifeste": "Why a Jewish time server: two times exist today, the time of the atom and the time of rotation. Jewish time is the second one.",
     "api": "Documentation for the public zman API: /api/now, /api/rega, /api/date, /api/molad, /api/year, /api/health. Free, no key, no Gregorian.",
     "methode": "How the counter is computed: epoch, dehiyot, the UTC → DUT1 → UT1 → Jerusalem mean time → rega’im chain, IERS predictions, tests."
   },
-  "nav": {"label": "Navigation", "clock": "The clock", "manifesto": "Manifesto", "method": "Method", "api": "API", "languages": "Languages"},
+  "nav": {
+    "label": "Navigation",
+    "clock": "The clock",
+    "manifesto": "Manifesto",
+    "method": "Method",
+    "api": "API",
+    "languages": "Languages"
+  },
   "footer": {
     "line": "A time of rotation, not a time of the atom. The reference is the Earth, as measured by the IERS.",
-    "data": "Data: CC BY 4.0 (proposed)",
+    "data": "Data: CC BY 4.0",
     "code": "Source code",
     "api": "API"
   },
-  "weekdays": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Shabbat"],
-  "months": ["", "Nisan", "Iyar", "Sivan", "Tammuz", "Av", "Elul", "Tishrei", "Cheshvan", "Kislev", "Tevet", "Shevat", "Adar", "Adar II"],
+  "weekdays": [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Shabbat"
+  ],
+  "months": [
+    "",
+    "Nisan",
+    "Iyar",
+    "Sivan",
+    "Tammuz",
+    "Av",
+    "Elul",
+    "Tishrei",
+    "Cheshvan",
+    "Kislev",
+    "Tevet",
+    "Shevat",
+    "Adar",
+    "Adar II"
+  ],
   "adar_i": "Adar I",
   "adar_ii": "Adar II",
   "clock": {

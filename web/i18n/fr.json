@@ -2,23 +2,62 @@
   "name": "Français",
   "dir": "ltr",
   "og_locale": "fr_FR",
-  "lang_names": {"fr": "FR", "en": "EN", "he": "עב"},
-  "titles": {"index": "L’horloge", "manifeste": "Manifeste", "api": "Documentation de l’API", "methode": "Méthode"},
+  "lang_names": {
+    "fr": "FR",
+    "en": "EN",
+    "he": "עב"
+  },
+  "titles": {
+    "index": "L’horloge",
+    "manifeste": "Manifeste",
+    "api": "Documentation de l’API",
+    "methode": "Méthode"
+  },
   "descriptions": {
     "index": "L’instant présent en temps juif : date hébraïque, heure, chelek, rega, et le nombre de rega’im écoulés depuis l’epoch. Référence : la rotation terrestre (UT1).",
     "manifeste": "Pourquoi un serveur de temps juif : deux temps existent aujourd’hui, le temps de l’atome et le temps de la rotation. Le temps juif est le second.",
     "api": "Documentation de l’API publique zman : /api/now, /api/rega, /api/date, /api/molad, /api/year, /api/health. Gratuit, sans clé, sans grégorien.",
     "methode": "Comment le compteur est calculé : epoch, dehiyot, chaîne UTC → DUT1 → UT1 → temps moyen de Jérusalem → rega’im, prédictions IERS, tests."
   },
-  "nav": {"label": "Navigation", "clock": "L’horloge", "manifesto": "Manifeste", "method": "Méthode", "api": "API", "languages": "Langues"},
+  "nav": {
+    "label": "Navigation",
+    "clock": "L’horloge",
+    "manifesto": "Manifeste",
+    "method": "Méthode",
+    "api": "API",
+    "languages": "Langues"
+  },
   "footer": {
     "line": "Un temps de rotation, pas un temps d’atome. La référence est la Terre, mesurée par l’IERS.",
-    "data": "Données : CC BY 4.0 (proposé)",
+    "data": "Données : CC BY 4.0",
     "code": "Code source",
     "api": "API"
   },
-  "weekdays": ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "Chabbat"],
-  "months": ["", "Nissan", "Iyar", "Sivan", "Tamouz", "Av", "Eloul", "Tichri", "Hechvan", "Kislev", "Tévet", "Chevat", "Adar", "Adar II"],
+  "weekdays": [
+    "dimanche",
+    "lundi",
+    "mardi",
+    "mercredi",
+    "jeudi",
+    "vendredi",
+    "Chabbat"
+  ],
+  "months": [
+    "",
+    "Nissan",
+    "Iyar",
+    "Sivan",
+    "Tamouz",
+    "Av",
+    "Eloul",
+    "Tichri",
+    "Hechvan",
+    "Kislev",
+    "Tévet",
+    "Chevat",
+    "Adar",
+    "Adar II"
+  ],
   "adar_i": "Adar I",
   "adar_ii": "Adar II",
   "clock": {
