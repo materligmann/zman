@@ -1,0 +1,21 @@
+{
+  "rega": 4163021922875,
+  "day": 2113294,
+  "hour": 22,
+  "chelek": 8,
+  "rega_in_chelek": 27,
+  "date": {
+    "year": 5786,
+    "month": 6,
+    "month_name": "Elul",
+    "month_name_he": "אלול",
+    "day": 25
+  },
+  "weekday": 1,
+  "weekday_name_he": "יום שני",
+  "clock": {
+    "source": "iers",
+    "dut1_age_days": 4.6,
+    "predicted": true
+  }
+}

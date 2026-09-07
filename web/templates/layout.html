@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="{{.Lang}}" dir="{{.Dir}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>{{.Title}} · zman</title>
+<meta name="description" content="{{.Desc}}">
+<link rel="canonical" href="{{.Canonical}}">
+{{range .Alternates}}<link rel="alternate" hreflang="{{.Lang}}" href="{{.URL}}">
+{{end}}<link rel="icon" href="{{asset "favicon.svg"}}" type="image/svg+xml">
+<link rel="stylesheet" href="{{asset "css/site.css"}}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="zman">
+<meta property="og:title" content="{{.Title}} · zman">
+<meta property="og:description" content="{{.Desc}}">
+<meta property="og:url" content="{{.Canonical}}">
+<meta property="og:image" content="{{.OGImage}}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="{{.S.OGLocale}}">
+<meta name="twitter:card" content="summary_large_image">
+{{if eq .Page ""}}<script src="{{asset "js/clock.js"}}" defer></script>{{end}}
+</head>
+<body class="page-{{if .Page}}{{.Page}}{{else}}index{{end}}">
+<header class="masthead">
+  <a class="brand" href="/"><span class="brand-he" lang="he" dir="rtl">זמן</span><span class="brand-latin">zman</span></a>
+  <nav class="nav" aria-label="{{.S.Nav.label}}">
+    <a href="/"{{if eq .Page ""}} aria-current="page"{{end}}>{{.S.Nav.clock}}</a>
+    <a href="/manifeste"{{if eq .Page "manifeste"}} aria-current="page"{{end}}>{{.S.Nav.manifesto}}</a>
+    <a href="/methode"{{if eq .Page "methode"}} aria-current="page"{{end}}>{{.S.Nav.method}}</a>
+    <a href="/api"{{if eq .Page "api"}} aria-current="page"{{end}}>{{.S.Nav.api}}</a>
+  </nav>
+  <nav class="langs" aria-label="{{.S.Nav.languages}}">
+    {{range .Langs}}<a href="{{.URL}}" lang="{{.Code}}" hreflang="{{.Code}}"{{if .Current}} aria-current="true"{{end}}>{{.Name}}</a>{{end}}
+  </nav>
+</header>
+<main class="main"{{if eq .Page ""}} data-i18n="{{.I18N}}"{{end}}>
+{{.Body}}
+</main>
+<footer class="colophon">
+  <p>{{.S.Footer.line}}</p>
+  <p>{{.S.Footer.data}} · <a href="{{.Repo}}" rel="noopener">{{.S.Footer.code}}</a> · <a href="/api">{{.S.Footer.api}}</a></p>
+</footer>
+</body>
+</html>

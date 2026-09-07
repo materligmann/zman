@@ -1,0 +1,95 @@
+<article class="article">
+<h1>Method</h1>
+<p class="lede">How the counter is computed, what is verified, and what remains to be done.</p>
+
+<h2>The unit and the epoch</h2>
+<p>The fundamental counter is a signed 64-bit integer: the number of rega’im elapsed since the epoch. The structural constants are set by definition and depend on no measurement:</p>
+<table>
+<tr><th>Unit</th><th class="num">Value</th><th>Source</th></tr>
+<tr><td>1 hour</td><td class="num">1,080 chalakim</td><td>Rambam, Hilkhot Kiddush ha-Chodesh 6:2</td></tr>
+<tr><td>1 chelek</td><td class="num">76 rega’im</td><td>ibid. 10:1</td></tr>
+<tr><td>1 day</td><td class="num">24 hours = 25,920 chalakim = 1,969,920 rega’im</td><td>by definition</td></tr>
+<tr><td>Start of the day</td><td class="num">18:00</td><td>Jerusalem mean time, fixed-calendar convention</td></tr>
+</table>
+<p>The epoch (rega 0) is the Saturday evening 18:00 that opens the week of the molad Tohu. Day 0 is that Sunday; day 1 is the Monday, which is also 1 Tishrei of year 1. The molad Tohu, <span class="he" lang="he">ב״ד ר״ד</span>, falls on day 2 of the week (Monday), 5 hours, 204 chalakim, that is:</p>
+<pre><code>1 × 25,920 + 5 × 1,080 + 204 = 31,524 chalakim
+31,524 × 76                  = 2,395,824 rega’im</code></pre>
+<p>This point is checked by a unit test, as is the identity “day 1 = 1 Tishrei 1 = Monday”. The day number <code>d</code> is related to the Reingold–Dershowitz <em>fixed date</em> by <code>RD = d − 1,373,428</code>; that relation calibrates the bridge to the machine clock, and it is verified by cross-tests on known instants.</p>
+
+<h2>The fixed calendar</h2>
+<p>The calendar is implemented without any external library, from the classical rules. The molad of Tishrei of year N is the molad Tohu plus ⌊(235 N − 234) / 19⌋ mean lunations of 29 days, 12 hours, 793 chalakim. 1 Tishrei follows after applying the four <span class="he" lang="he">דחיות</span>, in this order:</p>
+<table>
+<tr><th>Dechiyah</th><th>Condition</th><th>Effect</th></tr>
+<tr><td><span class="he" lang="he">מולד זקן</span></td><td>molad at 18 hours or later</td><td>postponed to the next day</td></tr>
+<tr><td><span class="he" lang="he">גטר״ד</span></td><td>common year, molad on a Tuesday at 9 h 204 ch or later</td><td>postponed (to Thursday, via the next rule)</td></tr>
+<tr><td><span class="he" lang="he">בט״ו תקפ״ט</span></td><td>year following a leap year, molad on a Monday at 15 h 589 ch or later</td><td>postponed to Tuesday</td></tr>
+<tr><td><span class="he" lang="he">לא אד״ו ראש</span></td><td>result on a Sunday, Wednesday or Friday</td><td>postponed to the next day</td></tr>
+</table>
+<p>The length of the year is the difference between two consecutive Rosh Hashanahs; Cheshvan and Kislev absorb the variation (353, 354, 355 days; 383, 384, 385 for leap years, years 3, 6, 8, 11, 14, 17 and 19 of the cycle). Months are numbered by the biblical convention: Nisan = 1 … Adar = 12, Adar II = 13.</p>
+
+<h2>The measurement chain</h2>
+<figure class="figure">
+<svg class="diagram" viewBox="0 0 760 300" role="img" aria-label="Chain converting the system clock into rega’im">
+  <defs><marker id="arrowhead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="arrowhead"/></marker></defs>
+  <rect x="20" y="30" width="170" height="60" rx="3" class="box"/>
+  <text x="105" y="55" text-anchor="middle">System clock</text>
+  <text x="105" y="76" text-anchor="middle" class="label mono">UTC (atom)</text>
+  <path d="M190 60H265" class="arrow"/>
+  <text x="228" y="50" text-anchor="middle" class="label">+ DUT1</text>
+  <rect x="265" y="30" width="170" height="60" rx="3" class="box"/>
+  <text x="350" y="55" text-anchor="middle">UT1</text>
+  <text x="350" y="76" text-anchor="middle" class="label">Earth rotation</text>
+  <rect x="265" y="130" width="170" height="60" rx="3" class="box"/>
+  <text x="350" y="155" text-anchor="middle">IERS</text>
+  <text x="350" y="176" text-anchor="middle" class="label mono">finals2000A.all</text>
+  <path d="M350 130V90" class="arrow"/>
+  <text x="440" y="118" class="label">interpolated UT1−UTC</text>
+  <path d="M435 60H510" class="arrow"/>
+  <text x="472" y="50" text-anchor="middle" class="label">+ 35.2137° E</text>
+  <rect x="510" y="30" width="230" height="60" rx="3" class="box"/>
+  <text x="625" y="55" text-anchor="middle">Jerusalem mean time</text>
+  <text x="625" y="76" text-anchor="middle" class="label">+ 2 h 20 min 51.288 s</text>
+  <path d="M625 90V130" class="arrow"/>
+  <text x="612" y="115" text-anchor="end" class="label">− epoch, × 1,969,920 / 86,400</text>
+  <rect x="510" y="130" width="230" height="60" rx="3" class="box-accent"/>
+  <text x="625" y="155" text-anchor="middle" class="accent">Rega (integer)</text>
+  <text x="625" y="176" text-anchor="middle" class="label mono">rega’im since the epoch</text>
+  <path d="M625 190V230" class="arrow"/>
+  <rect x="440" y="230" width="300" height="55" rx="3" class="box"/>
+  <text x="590" y="252" text-anchor="middle">Pure arithmetic</text>
+  <text x="590" y="272" text-anchor="middle" class="label">day · hour · chelek · rega · date · weekday</text>
+  <line x1="20" y1="215" x2="410" y2="215" class="rule"/>
+  <text x="20" y="240" class="label">Above this line: SI second, UTC, MJD.</text>
+  <text x="20" y="258" class="label">One package (pkg/clock + pkg/iers). The API never sees them.</text>
+</svg>
+<figcaption>From the machine clock to the counter. The second exists only in the first two boxes.</figcaption>
+</figure>
+<p>In detail:</p>
+<ol>
+<li>The server reads the machine clock, in UTC, synchronised by NTP.</li>
+<li>It computes the modified Julian date of the instant and linearly interpolates UT1−UTC (DUT1) between the two neighbouring lines of the IERS <code>finals2000A.all</code> file. A leap-second jump between two lines is not interpolated: the value on the nearer side is taken.</li>
+<li>UT1 = UTC + DUT1. This is the actual rotation of the Earth, to the precision of the measurements (a few tens of microseconds for final values, a few milliseconds for predictions one month out).</li>
+<li>Jerusalem mean time is UT1 shifted by the longitude, 35.2137° E, that is + 8,451.288 s. No time zone, no daylight saving.</li>
+<li>The time elapsed since the epoch is converted into rega’im by integer arithmetic: rega = ⌊nanoseconds × 1,969,920 / 86,400 × 10⁹⌋. The computation uses arbitrary-precision integers; no floating point enters the result.</li>
+</ol>
+<p>From there on everything is integer: division by 1,969,920 for the day, by 82,080 for the hour, by 76 for the chelek.</p>
+
+<h2>Predictions</h2>
+<p>The IERS publishes measured values a few days late, then a year of predictions marked <code>P</code>. When the current instant is past the last measurement, the server uses the prediction and says so: the field <code>clock.predicted</code> becomes <code>true</code> and <code>clock.dut1_age_days</code> gives the age of the last measurement. Beyond the last line of the file, the last known value is kept. The file is reloaded weekly; if it is unreachable, the disk cache, then the shared cache, serve as fallbacks. If no data is available at startup, the server runs in <code>fallback</code> mode with DUT1 = 0 — an error under one second, about twenty rega’im — and announces it in every response.</p>
+
+<h2>What is verified</h2>
+<ul>
+<li>Molad Tohu = day 2, 5 h, 204 ch = 31,524 chalakim = 2,395,824 rega’im; molad Tishrei 5786 = Monday, 18 h, 187 ch (that is, “12:10 and 7 chalakim” in the announcement convention).</li>
+<li>Round trip date ↔ day over two centuries of consecutive days, with month continuity.</li>
+<li>Length of every year from 1 to 10,000 within {353, 354, 355, 383, 384, 385}, consistent with the sum of the months and with leap-year status.</li>
+<li>Rosh Hashanah never on a Sunday, Wednesday or Friday, over ten thousand years.</li>
+<li>Reference dates checked against hebcal: 1 Tishrei 5782 to 5787, Pesach 5784 to 5786, Yom Kippur 5786, lengths of years 5782 to 5787.</li>
+<li>Clock bridge: the exact 18:00 Jerusalem mean time boundary, known instants landing on the right dates, 1 hour = 82,080 rega’im, monotonicity.</li>
+<li>IERS parsing on a real excerpt of the file, interpolation, leap second, disk cache and shared cache with a simulated network outage.</li>
+<li>API: every endpoint, JSON and text, redirects, rate limiting, and a test that walks every response to forbid the words <code>unix</code>, <code>utc</code>, <code>iso</code>, <code>gregorian</code>, <code>seconds</code>.</li>
+</ul>
+
+<h2>What is not done yet</h2>
+<p>The server does not measure the Earth’s rotation; it reads it from the IERS. The planned local sensor — gnomon and camera by day, astrometric solution of the sky by night — does not exist yet. The <code>Clock</code> interface (<code>Now() rega.Rega</code>, <code>Quality()</code>) is the replacement point; nothing in the API depends on it. The server does no holidays, no zmanim by location, no readings: for those, hebcal and KosherJava exist and are excellent.</p>
+<p>The code is public: <a href="{{.Repo}}" rel="noopener">{{.Repo}}</a>.</p>
+</article>

@@ -1,0 +1,15 @@
+{
+  "status": "ok",
+  "clock": {
+    "source": "iers",
+    "dut1_age_days": 4.6,
+    "predicted": true
+  },
+  "data": {
+    "loaded": true,
+    "records": 19976,
+    "measured_records": 19603,
+    "source": "disk",
+    "cache_age_days": 0
+  }
+}

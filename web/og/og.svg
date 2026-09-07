@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#f7f3ea"/>
+  <line x1="80" y1="112" x2="1120" y2="112" stroke="#d8d0bf" stroke-width="2"/>
+  <line x1="80" y1="518" x2="1120" y2="518" stroke="#d8d0bf" stroke-width="2"/>
+  <text x="600" y="330" font-family="Frank Ruhl Libre, David, Arial Hebrew, Times New Roman, serif" font-size="230" font-weight="700" text-anchor="middle" fill="#1d1a15">זמן</text>
+  <text x="600" y="430" font-family="EB Garamond, Georgia, Times New Roman, serif" font-size="40" text-anchor="middle" fill="#5a544a" font-style="italic">Un temps de rotation, pas un temps d’atome</text>
+  <text x="600" y="490" font-family="EB Garamond, Georgia, Times New Roman, serif" font-size="30" text-anchor="middle" fill="#8d2b1c" letter-spacing="6">RÉGA’IM DEPUIS L’EPOCH · UT1</text>
+</svg>

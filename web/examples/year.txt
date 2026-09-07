@@ -1,0 +1,103 @@
+{
+  "year": 5787,
+  "length": 385,
+  "leap": true,
+  "rosh_hashana": {
+    "day": 2113299,
+    "weekday": 6,
+    "weekday_name_he": "שבת"
+  },
+  "months": [
+    {
+      "month": 7,
+      "name": "Tishrei",
+      "name_he": "תשרי",
+      "length": 30,
+      "start_day": 2113299
+    },
+    {
+      "month": 8,
+      "name": "Cheshvan",
+      "name_he": "חשון",
+      "length": 30,
+      "start_day": 2113329
+    },
+    {
+      "month": 9,
+      "name": "Kislev",
+      "name_he": "כסלו",
+      "length": 30,
+      "start_day": 2113359
+    },
+    {
+      "month": 10,
+      "name": "Tevet",
+      "name_he": "טבת",
+      "length": 29,
+      "start_day": 2113389
+    },
+    {
+      "month": 11,
+      "name": "Shevat",
+      "name_he": "שבט",
+      "length": 30,
+      "start_day": 2113418
+    },
+    {
+      "month": 12,
+      "name": "Adar I",
+      "name_he": "אדר א׳",
+      "length": 30,
+      "start_day": 2113448
+    },
+    {
+      "month": 13,
+      "name": "Adar II",
+      "name_he": "אדר ב׳",
+      "length": 29,
+      "start_day": 2113478
+    },
+    {
+      "month": 1,
+      "name": "Nissan",
+      "name_he": "ניסן",
+      "length": 30,
+      "start_day": 2113507
+    },
+    {
+      "month": 2,
+      "name": "Iyar",
+      "name_he": "אייר",
+      "length": 29,
+      "start_day": 2113537
+    },
+    {
+      "month": 3,
+      "name": "Sivan",
+      "name_he": "סיון",
+      "length": 30,
+      "start_day": 2113566
+    },
+    {
+      "month": 4,
+      "name": "Tammuz",
+      "name_he": "תמוז",
+      "length": 29,
+      "start_day": 2113596
+    },
+    {
+      "month": 5,
+      "name": "Av",
+      "name_he": "אב",
+      "length": 30,
+      "start_day": 2113625
+    },
+    {
+      "month": 6,
+      "name": "Elul",
+      "name_he": "אלול",
+      "length": 29,
+      "start_day": 2113655
+    }
+  ]
+}

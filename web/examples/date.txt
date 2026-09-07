@@ -1,0 +1,14 @@
+{
+  "date": {
+    "year": 5787,
+    "month": 7,
+    "month_name": "Tishrei",
+    "month_name_he": "תשרי",
+    "day": 1
+  },
+  "day": 2113299,
+  "weekday": 6,
+  "weekday_name_he": "שבת",
+  "start": 4163029966080,
+  "end": 4163031936000
+}

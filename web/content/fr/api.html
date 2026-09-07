@@ -1,0 +1,80 @@
+<article class="article">
+<h1>L’API</h1>
+<p class="lede">Un timestamp juif autonome, en JSON ou en texte. Gratuit, sans clé, sans grégorien.</p>
+
+<h2>Principes</h2>
+<ul>
+<li>Base : <code>/api/</code>. Réponses en JSON ; envoyez <code>Accept: text/plain</code> ou ajoutez <code>?format=text</code> pour du texte.</li>
+<li>Pas de clé, pas d’inscription. CORS ouvert (<code>Access-Control-Allow-Origin: *</code>).</li>
+<li>Limite de débit par adresse : 20 requêtes par unité de cadence, rafale de 60 ; au-delà, <code>429</code> avec <code>Retry-After</code>.</li>
+<li><code>Cache-Control: max-age=1</code> sur <code>/api/now</code> ; un jour sur les réponses purement arithmétiques.</li>
+<li>Données : licence CC BY 4.0 proposée (comme hebcal), attribution « zman » ; code sous licence libre (MIT proposée). Ces licences sont en cours de décision et seront confirmées ici.</li>
+</ul>
+
+<h2>Unités et constantes</h2>
+<table>
+<tr><th>Nom</th><th class="num">Valeur</th><th>Remarque</th></tr>
+<tr><td>rega’im par chelek</td><td class="num">76</td><td>Rambam, Hilkhot Kiddoush ha-Hodesh 10:1</td></tr>
+<tr><td>chalakim par heure</td><td class="num">1 080</td><td>ibid. 6:2</td></tr>
+<tr><td>heures par jour</td><td class="num">24</td><td>depuis 18:00 temps moyen de Jérusalem</td></tr>
+<tr><td>rega’im par heure</td><td class="num">82 080</td><td></td></tr>
+<tr><td>chalakim par jour</td><td class="num">25 920</td><td></td></tr>
+<tr><td>rega’im par jour</td><td class="num">1 969 920</td><td>toujours, quelle que soit la durée du jour</td></tr>
+<tr><td>epoch</td><td class="num">rega 0</td><td>samedi 18:00 ouvrant la semaine du molad Tohou ; jour 0 = dimanche</td></tr>
+<tr><td>molad Tohou</td><td class="num">2 395 824</td><td>jour 1, 5 h, 204 ch</td></tr>
+<tr><td>1 Tichri de l’an 1</td><td class="num">jour 1</td><td>lundi</td></tr>
+<tr><td>mois</td><td class="num">1 – 13</td><td>Nissan = 1 … Adar = 12 (Adar I en année embolismique), Adar II = 13</td></tr>
+<tr><td>jour de la semaine</td><td class="num">0 – 6</td><td>dimanche = 0, Chabbat = 6</td></tr>
+</table>
+
+<h2>Endpoints</h2>
+
+<section class="endpoint">
+<h3><code>GET /api/now</code></h3>
+<p>L’instant présent : rega, jour, heure, chelek, rega dans le chelek, date, jour de la semaine, et qualité de l’horloge (<code>source</code> : <code>iers</code> ou <code>fallback</code> ; <code>dut1_age_days</code> : âge de la dernière mesure ; <code>predicted</code> : la valeur DUT1 est une prédiction).</p>
+<pre><code>curl -s {{.Base}}/api/now</code></pre>
+<pre><code>{{index .Examples "now"}}</code></pre>
+<p>En texte :</p>
+<pre><code>curl -s -H 'Accept: text/plain' {{.Base}}/api/now</code></pre>
+<pre><code>{{index .Examples "now-text"}}</code></pre>
+</section>
+
+<section class="endpoint">
+<h3><code>GET /api/rega/{n}</code></h3>
+<p>Décode un entier en jour, heure, chelek, rega, date et jour de la semaine. Pour un jour antérieur au 1 Tichri de l’an 1, <code>date</code> vaut <code>null</code>. Exemple : le molad Tohou.</p>
+<pre><code>curl -s {{.Base}}/api/rega/2395824</code></pre>
+<pre><code>{{index .Examples "rega"}}</code></pre>
+</section>
+
+<section class="endpoint">
+<h3><code>GET /api/date/{year}/{month}/{day}</code></h3>
+<p>Le jour donné, avec son premier rega (<code>start</code>) et le premier rega du lendemain (<code>end</code>, exclusif). Erreur <code>400</code> si la date n’existe pas (30 Hechvan une année déficiente, Adar II une année commune, etc.).</p>
+<pre><code>curl -s {{.Base}}/api/date/5787/7/1</code></pre>
+<pre><code>{{index .Examples "date"}}</code></pre>
+</section>
+
+<section class="endpoint">
+<h3><code>GET /api/molad/{year}/{month}</code></h3>
+<p>Le molad moyen du mois, en rega et en parts. La convention est celle des annonces : heures comptées depuis 18:00 la veille. « Vendredi soir 20:59 et 1 chelek » apparaît donc comme jour de la semaine 6 (le jour halachique a commencé), 2 heures, 1 063 chalakim.</p>
+<pre><code>curl -s {{.Base}}/api/molad/5787/7</code></pre>
+<pre><code>{{index .Examples "molad"}}</code></pre>
+</section>
+
+<section class="endpoint">
+<h3><code>GET /api/year/{year}</code></h3>
+<p>Longueur de l’année, caractère embolismique, Roch Hachana, et les mois dans l’ordre civil avec leur longueur et leur premier jour.</p>
+<pre><code>curl -s {{.Base}}/api/year/5787</code></pre>
+<pre><code>{{index .Examples "year"}}</code></pre>
+</section>
+
+<section class="endpoint">
+<h3><code>GET /api/health</code></h3>
+<p>État de l’horloge et du cache IERS. <code>200</code> si tout va bien, <code>503</code> en mode dégradé (pas de donnée IERS).</p>
+<pre><code>curl -s {{.Base}}/api/health</code></pre>
+<pre><code>{{index .Examples "health"}}</code></pre>
+</section>
+
+<h2>Ce que l’API ne renverra jamais</h2>
+<p>Aucune réponse ne contient de date grégorienne, de timestamp Unix, d’heure UTC ni de durée en secondes. Ce n’est pas un oubli : c’est le point du projet. Le compteur est natif — l’epoch est juif, l’unité est le rega, l’horloge est la rotation de la Terre — et le traduire dans le temps des nations reviendrait à en faire une dérivée de ce dont il veut précisément s’affranchir. La seconde SI et le calendrier grégorien n’existent que dans le package qui lit l’horloge de la machine ; un test automatique parcourt toutes les réponses et interdit les champs et les mots <code>unix</code>, <code>utc</code>, <code>iso</code>, <code>gregorian</code>, <code>seconds</code>. Si vous avez besoin d’une conversion, hebcal le fait très bien ; nous ne le ferons pas ici.</p>
+<p>Les anciens chemins sans préfixe (<code>/now</code>, <code>/rega/…</code>) répondent par une redirection <code>301</code> vers <code>/api/…</code>.</p>
+</article>

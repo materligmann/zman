@@ -1,0 +1,5 @@
+rega     4163021922875
+day      2113294  hour 22  chelek 8  rega 27
+date     25 Elul 5786 (אלול)
+weekday  1 יום שני
+clock    source=iers dut1_age_days=4.6 predicted=true

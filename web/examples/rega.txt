@@ -1,0 +1,16 @@
+{
+  "rega": 2395824,
+  "day": 1,
+  "hour": 5,
+  "chelek": 204,
+  "rega_in_chelek": 0,
+  "date": {
+    "year": 1,
+    "month": 7,
+    "month_name": "Tishrei",
+    "month_name_he": "תשרי",
+    "day": 1
+  },
+  "weekday": 1,
+  "weekday_name_he": "יום שני"
+}

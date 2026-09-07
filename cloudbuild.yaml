@@ -1,0 +1,30 @@
+# Pipeline Cloud Build équivalent à deploy.sh, pour un déclencheur sur push.
+# gcloud builds submit --config cloudbuild.yaml --project essai-478723
+substitutions:
+  _REGION: europe-west1
+  _SERVICE: zman
+  _BUCKET: essai-478723-zman-iers
+  _REPO_URL: https://github.com/materligmann/zman
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args: ["build", "-t", "${_REGION}-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/${_SERVICE}:$COMMIT_SHA", "-t", "${_REGION}-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/${_SERVICE}:latest", "."]
+  - name: gcr.io/cloud-builders/docker
+    args: ["push", "--all-tags", "${_REGION}-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/${_SERVICE}"]
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - ${_SERVICE}
+      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/${_SERVICE}:$COMMIT_SHA
+      - --region=${_REGION}
+      - --allow-unauthenticated
+      - --port=8080
+      - --memory=256Mi
+      - --min-instances=0
+      - --max-instances=3
+      - --set-env-vars=IERS_CACHE_GCS=${_BUCKET}/finals.all,IERS_CACHE_PATH=/tmp/finals.all,REPO_URL=${_REPO_URL}
+images:
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/${_SERVICE}:$COMMIT_SHA
+options:
+  logging: CLOUD_LOGGING_ONLY

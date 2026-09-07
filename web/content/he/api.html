@@ -1,0 +1,80 @@
+<article class="article">
+<h1>ה־API</h1>
+<p class="lede">חותמת זמן יהודית עצמאית, ב־JSON או בטקסט. חינם, ללא מפתח, ללא לוח גרגוריאני.</p>
+
+<h2>עקרונות</h2>
+<ul>
+<li>בסיס: <code>/api/</code>. תשובות ב־JSON; שלחו <code>Accept: text/plain</code> או הוסיפו <code>?format=text</code> לקבלת טקסט.</li>
+<li>ללא מפתח, ללא הרשמה. CORS פתוח (<code>Access-Control-Allow-Origin: *</code>).</li>
+<li>הגבלת קצב לכל כתובת: 20 בקשות ליחידת קצב, פרץ של 60; מעבר לכך, <code>429</code> עם <code>Retry-After</code>.</li>
+<li><code>Cache-Control: max-age=1</code> על <code>/api/now</code>; יום אחד על תשובות חשבוניות טהורות.</li>
+<li>נתונים: מוצע רישיון CC BY 4.0 (כמו hebcal), עם ייחוס ל־"zman"; קוד ברישיון חופשי (מוצע MIT). הרישיונות בהכרעה ויאושרו כאן.</li>
+</ul>
+
+<h2>יחידות וקבועים</h2>
+<table>
+<tr><th>שם</th><th class="num">ערך</th><th>הערה</th></tr>
+<tr><td>רגעים בחלק</td><td class="num">76</td><td>רמב"ם, הלכות קידוש החודש י, א</td></tr>
+<tr><td>חלקים בשעה</td><td class="num">1,080</td><td>שם, ו, ב</td></tr>
+<tr><td>שעות ביום</td><td class="num">24</td><td>מ־18:00 זמן ירושלים הממוצע</td></tr>
+<tr><td>רגעים בשעה</td><td class="num">82,080</td><td></td></tr>
+<tr><td>חלקים ביום</td><td class="num">25,920</td><td></td></tr>
+<tr><td>רגעים ביום</td><td class="num">1,969,920</td><td>תמיד, יהא אורך היום אשר יהא</td></tr>
+<tr><td>ראשית המניין</td><td class="num">רגע 0</td><td>מוצאי שבת 18:00 הפותח את שבוע מולד תוהו; יום 0 = יום ראשון</td></tr>
+<tr><td>מולד תוהו</td><td class="num">2,395,824</td><td>יום 1, 5 שעות, 204 חלקים</td></tr>
+<tr><td>א' בתשרי שנת א</td><td class="num">יום 1</td><td>יום שני</td></tr>
+<tr><td>חודשים</td><td class="num">1 – 13</td><td>ניסן = 1 … אדר = 12 (אדר א׳ בשנה מעוברת), אדר ב׳ = 13</td></tr>
+<tr><td>יום בשבוע</td><td class="num">0 – 6</td><td>יום ראשון = 0, שבת = 6</td></tr>
+</table>
+
+<h2>נקודות קצה</h2>
+
+<section class="endpoint">
+<h3><code>GET /api/now</code></h3>
+<p>הרגע הנוכחי: רגע, יום, שעה, חלק, רגע בתוך החלק, תאריך, יום בשבוע, ואיכות השעון (<code>source</code>: ‏<code>iers</code> או <code>fallback</code>; ‏<code>dut1_age_days</code>: גיל המדידה האחרונה; <code>predicted</code>: ערך DUT1 הוא תחזית).</p>
+<pre><code>curl -s {{.Base}}/api/now</code></pre>
+<pre><code>{{index .Examples "now"}}</code></pre>
+<p>כטקסט:</p>
+<pre><code>curl -s -H 'Accept: text/plain' {{.Base}}/api/now</code></pre>
+<pre><code>{{index .Examples "now-text"}}</code></pre>
+</section>
+
+<section class="endpoint">
+<h3><code>GET /api/rega/{n}</code></h3>
+<p>מפענח מספר שלם ליום, שעה, חלק, רגע, תאריך ויום בשבוע. ליום שלפני א' בתשרי שנת א, <code>date</code> הוא <code>null</code>. דוגמה: מולד תוהו.</p>
+<pre><code>curl -s {{.Base}}/api/rega/2395824</code></pre>
+<pre><code>{{index .Examples "rega"}}</code></pre>
+</section>
+
+<section class="endpoint">
+<h3><code>GET /api/date/{year}/{month}/{day}</code></h3>
+<p>היום הנתון, עם הרגע הראשון שלו (<code>start</code>) והרגע הראשון של היום שאחריו (<code>end</code>, לא כולל). שגיאה <code>400</code> אם התאריך אינו קיים (ל' בחשון בשנה חסרה, אדר ב׳ בשנה פשוטה, וכדומה).</p>
+<pre><code>curl -s {{.Base}}/api/date/5787/7/1</code></pre>
+<pre><code>{{index .Examples "date"}}</code></pre>
+</section>
+
+<section class="endpoint">
+<h3><code>GET /api/molad/{year}/{month}</code></h3>
+<p>המולד הממוצע של החודש, ברגעים ובחלקים. המוסכמה היא זו של ההכרזות: שעות נספרות מ־18:00 בערב הקודם. "ליל שבת 20:59 וחלק אחד" מופיע אפוא כיום בשבוע 6 (היום ההלכתי כבר החל), 2 שעות, 1,063 חלקים.</p>
+<pre><code>curl -s {{.Base}}/api/molad/5787/7</code></pre>
+<pre><code>{{index .Examples "molad"}}</code></pre>
+</section>
+
+<section class="endpoint">
+<h3><code>GET /api/year/{year}</code></h3>
+<p>אורך השנה, האם היא מעוברת, ראש השנה, והחודשים בסדר האזרחי עם אורכם ויומם הראשון.</p>
+<pre><code>curl -s {{.Base}}/api/year/5787</code></pre>
+<pre><code>{{index .Examples "year"}}</code></pre>
+</section>
+
+<section class="endpoint">
+<h3><code>GET /api/health</code></h3>
+<p>מצב השעון ומטמון ה־IERS. ‏<code>200</code> כשהכול תקין, <code>503</code> במצב מנוון (ללא נתוני IERS).</p>
+<pre><code>curl -s {{.Base}}/api/health</code></pre>
+<pre><code>{{index .Examples "health"}}</code></pre>
+</section>
+
+<h2>מה ה־API לעולם לא יחזיר</h2>
+<p>שום תשובה אינה מכילה תאריך גרגוריאני, חותמת זמן של Unix, שעת UTC או משך בשניות. זו אינה השמטה: זו הנקודה של הפרויקט. המונה הוא מקורי — ראשית המניין יהודית, היחידה היא הרגע, השעון הוא סיבוב כדור הארץ — ותרגומו לזמן האומות יהפוך אותו לנגזרת של בדיוק מה שהוא מבקש להשתחרר ממנו. השנייה של SI והלוח הגרגוריאני קיימים רק בחבילה הקוראת את שעון המחשב; בדיקה אוטומטית עוברת על כל התשובות ואוסרת את השדות והמילים <code>unix</code>, <code>utc</code>, <code>iso</code>, <code>gregorian</code>, <code>seconds</code>. אם אתם זקוקים להמרה, hebcal עושה זאת היטב; כאן לא נעשה זאת.</p>
+<p>הנתיבים הישנים ללא קידומת (<code>/now</code>, <code>/rega/…</code>) עונים בהפניה <code>301</code> אל <code>/api/…</code>.</p>
+</article>
