@@ -1,0 +1,10 @@
+# Projet généré par XcodeGen depuis project.yml
+Zman.xcodeproj/
+xcuserdata/
+ZmanCore/.build/
+ZmanCore/.swiftpm/
+# Clés App Store Connect (copie de secours : projet midbar)
+publish/.env
+publish/AuthKey_*.p8
+build/
+publish/review-contact.json

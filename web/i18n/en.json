@@ -11,13 +11,15 @@
     "index": "The clock",
     "manifeste": "Manifesto",
     "api": "API documentation",
-    "methode": "Method"
+    "methode": "Method",
+    "confidentialite": "Privacy"
   },
   "descriptions": {
     "index": "The present moment in Jewish time: Hebrew date, hour, chelek, rega, and the number of rega’im elapsed since the epoch. Reference: the Earth’s rotation (UT1).",
     "manifeste": "Why a Jewish time server: two times exist today, the time of the atom and the time of rotation. Jewish time is the second one.",
     "api": "Documentation for the public zman API: /api/now, /api/rega, /api/date, /api/molad, /api/year, /api/health. Free, no key, no Gregorian.",
-    "methode": "How the counter is computed: epoch, dehiyot, the UTC → DUT1 → UT1 → Jerusalem mean time → rega’im chain, IERS predictions, tests."
+    "methode": "How the counter is computed: epoch, dehiyot, the UTC → DUT1 → UT1 → Jerusalem mean time → rega’im chain, IERS predictions, tests.",
+    "confidentialite": "What zman and its apps know about you: nothing personal. No account, no tracking, no advertising."
   },
   "nav": {
     "label": "Navigation",
@@ -31,7 +33,8 @@
     "line": "A time of rotation, not a time of the atom. The reference is the Earth, as measured by the IERS.",
     "data": "Data: CC BY 4.0",
     "code": "Source code",
-    "api": "API"
+    "api": "API",
+    "privacy": "Privacy"
   },
   "weekdays": [
     "Sunday",

@@ -1,0 +1,7 @@
+Zman shows the current moment in the traditional Jewish time system (Hebrew date, hour, chelek, rega), computed on the device and periodically synchronised with our public server https://zman.technology/api/now, which follows the Earth's rotation (UT1, from IERS data).
+
+No account, no login, no in-app purchase, no permissions requested. All features are available immediately.
+
+The app includes a home screen / lock screen widget (Zman): long-press the home screen, tap "+" or "Edit", search "Zman".
+
+The interface follows the device language (French, English or Hebrew). Method and sources: https://zman.technology/en/methode

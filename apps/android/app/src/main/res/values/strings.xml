@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Français (langue par défaut, comme le site). Textes repris de web/content/fr/index.html et web/i18n/fr.json. -->
+<resources>
+    <string name="lang" translatable="false">fr</string>
+    <string name="app_name" translatable="false">Zman</string>
+    <string name="hour">heure</string>
+    <string name="chelek">chelek</string>
+    <string name="rega">rega</string>
+    <string name="hour_n">heure %d</string>
+    <string name="regaim_since_epoch">rega’im depuis l’epoch</string>
+    <string name="syncing">Synchronisation…</string>
+    <string name="why">Pourquoi ce compteur est différent de votre montre →</string>
+    <string name="note">Entre deux synchronisations, l’appareil interpole ; la référence est le serveur, qui suit la rotation terrestre (UT1).</string>
+    <string name="measured">mesurée</string>
+    <string name="predicted">prédite</string>
+    <string name="data_age">Donnée IERS vieille de %1$d jours, %2$s.</string>
+    <string name="fallback">Sans donnée IERS : UT1 approché par l’horloge de la machine.</string>
+    <string name="offline">Serveur injoignable : interpolation locale seulement.</string>
+    <string name="never_synced">Jamais synchronisé : horloge de l’appareil seule (UT1 ≈ UTC).</string>
+    <string name="privacy">Confidentialité</string>
+    <string name="widget_title">Le widget</string>
+    <string name="widget_hint">Posez Zman sur l’écran d’accueil : la date hébraïque et l’heure du jour, d’un coup d’œil.</string>
+    <string name="widget_add">Ajouter le widget</string>
+    <string name="widget_manual">Ou : appui long sur l’écran d’accueil › Widgets › Zman.</string>
+    <string name="widget_name">Zman</string>
+    <string name="widget_description">La date hébraïque et l’heure du jour, en temps de rotation.</string>
+</resources>
