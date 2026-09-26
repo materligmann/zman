@@ -260,3 +260,65 @@ volée avec les alternates `hreflang`.
 Code sous licence MIT, voir `LICENSE`. Les réponses de l'API (données) sont
 sous licence [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) :
 réutilisation libre avec attribution « zman, https://zman.technology ».
+
+## Apps mobiles
+
+`apps/ios` (SwiftUI + WidgetKit) et `apps/android` (Jetpack Compose + Glance)
+affichent la même horloge que la page d'accueil, avec un widget. Toutes deux
+embarquent un portage de `pkg/rega`, `pkg/luach` et du pont de `pkg/clock` :
+elles calculent localement à partir de l'horloge de l'appareil, et se
+recalent sur `/api/now` (écart mesuré au milieu de l'aller-retour, qui
+contient DUT1). Hors ligne, elles continuent avec la dernière correction
+connue. Les tests des portages reprennent les vecteurs des tests Go.
+
+Le widget affiche la date hébraïque, le jour de la semaine, l'heure du jour
+et la part écoulée de l'heure ; il est redessiné à chaque début d'heure
+(timeline WidgetKit ; WorkManager sur Android).
+
+```
+cd apps/ios/ZmanCore && swift test          # noyau Swift
+cd apps/ios && xcodegen generate && open Zman.xcodeproj
+cd apps/android && ./gradlew testDebugUnitTest assembleDebug
+```
+
+En debug, l'app iOS lancée avec l'argument `-widgetGallery` montre toutes
+les tailles du widget. Icônes et polices TTF : `scripts/gen-app-icons.py`.
+
+### Publication
+
+Identifiants : iOS `studio.100-8.zman` (widget `studio.100-8.zman.widget`, groupe
+`group.studio.100-8.zman`, équipe BAJCWWQ6Q6), Android `studiocentmoinshuit.zman`
+(« studio.100-8… » n'est pas un nom de paquet Android valide). Noms : « Zman — temps
+juif » sur l'App Store (« Zman » y était pris), « Zman » sur Google Play.
+
+Tout passe par les API des stores, sur le modèle de Midbar. Les clés sont hors git :
+`apps/ios/publish/{.env,AuthKey_*.p8,review-contact.json}` (clé App Store Connect du
+studio) et `apps/android/{keystore/,keystore.properties,publish/play-service-account.json}`
+(clé d'upload propre à Zman, copie dans Secret Manager d'essai-478723 :
+`zman-play-upload-keystore`, `zman-play-upload-password`).
+
+```
+# iOS — incrémenter CURRENT_PROJECT_VERSION (et MARKETING_VERSION) dans apps/ios/project.yml
+apps/ios/publish/release.sh                   # archive + envoi du build
+node apps/ios/publish/asc.mjs listing         # textes fr/en/he + captures (appstore/listing, appstore/out)
+node apps/ios/publish/asc.mjs release         # attend le traitement, attache, soumet à l'examen
+node apps/ios/publish/asc.mjs status
+node apps/ios/publish/asc.mjs withdraw        # retire une soumission en attente, pour envoyer un autre build
+
+# Android — incrémenter versionCode/versionName dans apps/android/app/build.gradle.kts
+cd apps/android && ./gradlew bundleRelease
+publish/.venv/bin/python publish/publish.py listing    # textes + visuels (play/listing, play/out)
+publish/.venv/bin/python publish/publish.py upload --track production
+publish/.venv/bin/python publish/publish.py status
+```
+
+Captures : les brutes sont dans `apps/ios/appstore/captures` (simulateur iPhone
+16 Pro Max, 1320 × 2868) et `apps/android/play/captures` (émulateur), nommées
+`<fr|en|he>-<n>-<clock|dark|widgets|widget>.png` ; `scripts/render-store-shots.py`
+compose les visuels finaux (légende + capture), l'icône 512 et la bannière Play.
+
+Faits une fois à la main, l'API ne les exposant pas : création des deux fiches,
+« Confidentialité de l'app » sur App Store Connect (aucune donnée collectée),
+questionnaires de la Play Console (classification IARC, public 13 ans et plus,
+sécurité des données, catégorie Outils, 177 pays) et droits du compte de service
+`play-publisher@generative-news-470721` sur Zman.

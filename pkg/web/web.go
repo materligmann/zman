@@ -25,7 +25,7 @@ import (
 var Langs = []string{"fr", "en", "he"}
 
 // Pages sont les slugs des pages, identiques dans toutes les langues.
-var Pages = []string{"", "manifeste", "api", "methode"}
+var Pages = []string{"", "manifeste", "api", "methode", "confidentialite"}
 
 const cookieName = "lang"
 

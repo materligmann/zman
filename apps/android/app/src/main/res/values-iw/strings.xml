@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="lang" translatable="false">he</string>
+    <string name="hour">שעה</string>
+    <string name="chelek">חלק</string>
+    <string name="rega">רגע</string>
+    <string name="hour_n">שעה %d</string>
+    <string name="regaim_since_epoch">רגעים מאז ראשית המניין</string>
+    <string name="syncing">מסתנכרן…</string>
+    <string name="why">למה המונה הזה שונה מהשעון שלכם ←</string>
+    <string name="note">בין שני סנכרונים המכשיר משלים בעצמו; הייחוס הוא השרת, העוקב אחר סיבוב כדור הארץ (UT1).</string>
+    <string name="measured">מדודים</string>
+    <string name="predicted">חזויים</string>
+    <string name="data_age">נתוני IERS בני %1$d ימים, %2$s.</string>
+    <string name="fallback">ללא נתוני IERS:‏ UT1 מקורב לפי שעון המחשב.</string>
+    <string name="offline">השרת אינו זמין: אינטרפולציה מקומית בלבד.</string>
+    <string name="never_synced">לא סונכרן מעולם: שעון המכשיר בלבד (UT1 ≈ UTC).</string>
+    <string name="privacy">פרטיות</string>
+    <string name="widget_title">הווידג׳ט</string>
+    <string name="widget_hint">הניחו את זמן במסך הבית: התאריך העברי ושעת היום, במבט אחד.</string>
+    <string name="widget_add">הוספת הווידג׳ט</string>
+    <string name="widget_manual">או: לחיצה ארוכה על מסך הבית ‹ ווידג׳טים ‹ Zman.</string>
+    <string name="widget_name">זמן</string>
+    <string name="widget_description">התאריך העברי ושעת היום, בזמן הסיבוב.</string>
+</resources>

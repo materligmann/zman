@@ -1,0 +1,16 @@
+Zman shows the present moment in Jewish time, and only in Jewish time: the Hebrew date, the hour of the day, the chelek and the rega, with no Gregorian date and no civil clock.
+
+The day begins at 18:00, Jerusalem mean time. It has 24 hours; each hour, 1,080 chalakim; each chelek, 76 rega’im (Rambam, Hilchot Kiddush HaChodesh). These divisions are proportions of the day, not seconds: a day is one real rotation of the Earth, however long it lasts.
+
+That is why Zman does not follow the atomic clock but UT1, the time scale that follows the Earth’s rotation as measured by the IERS. The app counts rega’im on your phone and regularly re-syncs with the zman.technology server, which applies the measured correction. Offline, it carries on with the last known correction.
+
+• The Hebrew date in letters and numbers, the day of the week
+• Hour · chelek · rega, live
+• The number of rega’im since the epoch, the molad Tohu
+• The state of the measurement: age of the IERS data, measured or predicted
+• A home screen widget, with the elapsed part of the hour
+• In English, French and Hebrew
+
+The calendar is computed from the rules of the fixed calendar (molad, dehiyot), checked by tests. Method and sources: zman.technology/en/methode.
+
+No account, no ads, no tracking. The API data is published under CC BY 4.0, the code under the MIT licence.

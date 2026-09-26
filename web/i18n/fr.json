@@ -11,13 +11,15 @@
     "index": "L’horloge",
     "manifeste": "Manifeste",
     "api": "Documentation de l’API",
-    "methode": "Méthode"
+    "methode": "Méthode",
+    "confidentialite": "Confidentialité"
   },
   "descriptions": {
     "index": "L’instant présent en temps juif : date hébraïque, heure, chelek, rega, et le nombre de rega’im écoulés depuis l’epoch. Référence : la rotation terrestre (UT1).",
     "manifeste": "Pourquoi un serveur de temps juif : deux temps existent aujourd’hui, le temps de l’atome et le temps de la rotation. Le temps juif est le second.",
     "api": "Documentation de l’API publique zman : /api/now, /api/rega, /api/date, /api/molad, /api/year, /api/health. Gratuit, sans clé, sans grégorien.",
-    "methode": "Comment le compteur est calculé : epoch, dehiyot, chaîne UTC → DUT1 → UT1 → temps moyen de Jérusalem → rega’im, prédictions IERS, tests."
+    "methode": "Comment le compteur est calculé : epoch, dehiyot, chaîne UTC → DUT1 → UT1 → temps moyen de Jérusalem → rega’im, prédictions IERS, tests.",
+    "confidentialite": "Ce que zman et ses apps savent de vous : rien de personnel. Pas de compte, pas de suivi, pas de publicité."
   },
   "nav": {
     "label": "Navigation",
@@ -31,7 +33,8 @@
     "line": "Un temps de rotation, pas un temps d’atome. La référence est la Terre, mesurée par l’IERS.",
     "data": "Données : CC BY 4.0",
     "code": "Code source",
-    "api": "API"
+    "api": "API",
+    "privacy": "Confidentialité"
   },
   "weekdays": [
     "dimanche",

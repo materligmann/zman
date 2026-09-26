@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="lang" translatable="false">en</string>
+    <string name="hour">hour</string>
+    <string name="chelek">chelek</string>
+    <string name="rega">rega</string>
+    <string name="hour_n">hour %d</string>
+    <string name="regaim_since_epoch">rega’im since the epoch</string>
+    <string name="syncing">Synchronising…</string>
+    <string name="why">Why this counter differs from your watch →</string>
+    <string name="note">Between two synchronisations the device interpolates; the reference is the server, which follows the Earth’s rotation (UT1).</string>
+    <string name="measured">measured</string>
+    <string name="predicted">predicted</string>
+    <string name="data_age">IERS data is %1$d days old, %2$s.</string>
+    <string name="fallback">No IERS data: UT1 approximated by the machine clock.</string>
+    <string name="offline">Server unreachable: local interpolation only.</string>
+    <string name="never_synced">Never synchronised: device clock only (UT1 ≈ UTC).</string>
+    <string name="privacy">Privacy</string>
+    <string name="widget_title">The widget</string>
+    <string name="widget_hint">Put Zman on your home screen: the Hebrew date and the hour of the day, at a glance.</string>
+    <string name="widget_add">Add the widget</string>
+    <string name="widget_manual">Or: touch and hold the home screen › Widgets › Zman.</string>
+    <string name="widget_name">Zman</string>
+    <string name="widget_description">The Hebrew date and the hour of the day, in rotation time.</string>
+</resources>
