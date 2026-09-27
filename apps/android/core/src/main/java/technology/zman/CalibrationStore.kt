@@ -2,10 +2,9 @@ package technology.zman
 
 import android.content.Context
 import technology.zman.core.Calibration
-import technology.zman.core.Lang
 import technology.zman.core.ZmanClock
 
-/** Dernière calibration, partagée entre l'app et le widget. */
+/** Dernière calibration, partagée entre l'app et le widget (ou, sur la montre, la tuile et les complications). */
 class CalibrationStore(context: Context) {
     private val prefs = context.applicationContext.getSharedPreferences("zman", Context.MODE_PRIVATE)
 
@@ -32,6 +31,3 @@ class CalibrationStore(context: Context) {
 
     fun clock(): ZmanClock = ZmanClock(load())
 }
-
-/** Langue de l'interface, telle que résolue par les ressources (values, values-en, values-iw). */
-fun Context.lang(): Lang = Lang.of(getString(R.string.lang))

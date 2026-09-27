@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="lang" translatable="false">he</string>
+    <string name="hour">שעה</string>
+    <string name="chelek">חלק</string>
+    <string name="rega">רגע</string>
+    <string name="hour_n">שעה %d</string>
+    <string name="syncing">מסתנכרן…</string>
+    <string name="measured">מדודים</string>
+    <string name="predicted">חזויים</string>
+    <string name="data_age">נתוני IERS בני %1$d ימים, %2$s.</string>
+    <string name="fallback">ללא נתוני IERS:‏ UT1 מקורב לפי שעון המחשב.</string>
+    <string name="offline">השרת אינו זמין: אינטרפולציה מקומית בלבד.</string>
+    <string name="never_synced">לא סונכרן מעולם: שעון המכשיר בלבד (UT1 ≈ UTC).</string>
+    <string name="complication_name">זמן: תאריך ושעת היום</string>
+</resources>

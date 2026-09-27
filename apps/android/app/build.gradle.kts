@@ -59,6 +59,7 @@ kotlin {
 }
 
 dependencies {
+    implementation(project(":core"))
     val composeBom = platform("androidx.compose:compose-bom:2025.06.01")
     implementation(composeBom)
     implementation("androidx.compose.ui:ui")
@@ -70,7 +71,4 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.9.1")
     implementation("androidx.glance:glance-appwidget:1.1.1")
     implementation("androidx.work:work-runtime-ktx:2.10.1")
-
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("org.json:json:20240303") // org.json d'Android n'est qu'un stub sur la JVM
 }

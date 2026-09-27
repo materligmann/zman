@@ -9,6 +9,7 @@ C’est pourquoi Zman ne suit pas l’horloge atomique mais UT1, l’échelle de
 • Le nombre de rega’im écoulés depuis l’epoch, le molad Tohou
 • L’état de la mesure : fraîcheur de la donnée IERS, mesurée ou prédite
 • Un widget pour l’écran d’accueil, avec la part écoulée de l’heure
+• Une app Apple Watch, et des complications pour le cadran : date hébraïque et heure du jour au poignet
 • En français, en anglais et en hébreu
 
 Le calendrier est calculé par les règles du calendrier fixe (molad, dehiyot), vérifiées par des tests. Méthode et sources : zman.technology/methode.

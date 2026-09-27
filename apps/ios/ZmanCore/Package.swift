@@ -3,7 +3,7 @@ import PackageDescription
 
 let package = Package(
     name: "ZmanCore",
-    platforms: [.iOS(.v17), .macOS(.v14)],
+    platforms: [.iOS(.v17), .watchOS(.v10), .macOS(.v14)],
     products: [
         .library(name: "ZmanCore", targets: ["ZmanCore"]),
     ],

@@ -2,7 +2,7 @@
 /**
  * App Store Connect, en ligne de commande (repris de l'outillage de Midbar).
  *
- *   node publish/asc.mjs register    # identifiants de l'app et du widget + capacité App Groups
+ *   node publish/asc.mjs register    # identifiants de l'app, de l'app montre et des widgets + App Groups
  *   node publish/asc.mjs setup       # catégories, âge, droits, prix (gratuit), disponibilité
  *   node publish/asc.mjs listing     # textes (fr, en, he) et captures de la version courante
  *   node publish/asc.mjs review      # coordonnées et notes pour l'examinateur
@@ -33,6 +33,8 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const IOS = path.resolve(HERE, "..");
 const BUNDLE_ID = "studio.100-8.zman";
 const WIDGET_ID = "studio.100-8.zman.widget";
+const WATCH_ID = "studio.100-8.zman.watchkitapp";
+const WATCH_WIDGET_ID = "studio.100-8.zman.watchkitapp.widget";
 const API = "https://api.appstoreconnect.apple.com";
 const COPYRIGHT = `Copyright © ${new Date().getFullYear()} Mathias Erligmann. All rights reserved.`;
 
@@ -100,7 +102,8 @@ const read = (p) => fs.readFileSync(p, "utf8").trim();
 // --- Identifiants ------------------------------------------------------------
 
 async function register() {
-  for (const [identifier, name] of [[BUNDLE_ID, "Zman"], [WIDGET_ID, "Zman Widget"]]) {
+  for (const [identifier, name] of [[BUNDLE_ID, "Zman"], [WIDGET_ID, "Zman Widget"],
+    [WATCH_ID, "Zman Watch"], [WATCH_WIDGET_ID, "Zman Watch Complications"]]) {
     let b = (await api("GET", `/bundleIds?filter[identifier]=${identifier}`)).data
       .find((x) => x.attributes.identifier === identifier);
     if (!b) {
@@ -378,7 +381,9 @@ const SITE = "https://zman.technology";
 const LINK_LANG = { "fr-FR": "fr", "en-US": "en", he: "he" };
 const LISTING = path.join(IOS, "appstore", "listing");
 const SHOTS = path.join(IOS, "appstore", "out");
+const WATCH_SHOTS = path.join(IOS, "appstore", "watch");
 const DISPLAY_TYPE = "APP_IPHONE_67"; // 6,9 pouces : 1320 × 2868
+const WATCH_DISPLAY_TYPE = "APP_WATCH_SERIES_10"; // 46 mm : 416 × 496
 
 function listingOf(locale) {
   const f = (name) => read(path.join(LISTING, locale, `${name}.txt`));
@@ -403,17 +408,27 @@ async function upsertLocalization(list, type, locale, attributes, parentRel) {
   return created.data.id;
 }
 
+/** Captures iPhone (composées, appstore/out/<locale>/) puis Apple Watch (brutes, appstore/watch/<lang>-*.png). */
 async function uploadScreenshots(localizationId, locale) {
   const dir = path.join(SHOTS, locale);
   if (!fs.existsSync(dir)) { console.log(`  ${locale} : pas de captures dans ${path.relative(IOS, dir)}`); return; }
-  const files = fs.readdirSync(dir).filter((f) => f.endsWith(".png")).sort();
+  const phone = fs.readdirSync(dir).filter((f) => f.endsWith(".png")).sort().map((f) => path.join(dir, f));
+  await uploadSet(localizationId, locale, DISPLAY_TYPE, phone);
+  const lang = LINK_LANG[locale];
+  const watch = fs.existsSync(WATCH_SHOTS)
+    ? fs.readdirSync(WATCH_SHOTS).filter((f) => f.startsWith(`${lang}-`) && f.endsWith(".png")).sort().map((f) => path.join(WATCH_SHOTS, f))
+    : [];
+  if (watch.length) await uploadSet(localizationId, locale, WATCH_DISPLAY_TYPE, watch);
+}
+
+async function uploadSet(localizationId, locale, displayType, files) {
   const sets = await api("GET", `/appStoreVersionLocalizations/${localizationId}/appScreenshotSets?include=appScreenshots`);
-  let set = sets.data.find((s) => s.attributes.screenshotDisplayType === DISPLAY_TYPE);
+  let set = sets.data.find((s) => s.attributes.screenshotDisplayType === displayType);
   if (!set) {
     set = (await api("POST", "/appScreenshotSets", {
       data: {
         type: "appScreenshotSets",
-        attributes: { screenshotDisplayType: DISPLAY_TYPE },
+        attributes: { screenshotDisplayType: displayType },
         relationships: { appStoreVersionLocalization: { data: { type: "appStoreVersionLocalizations", id: localizationId } } },
       },
     })).data;
@@ -424,8 +439,9 @@ async function uploadScreenshots(localizationId, locale) {
       await api("DELETE", `/appScreenshots/${old.id}`);
     }
   }
-  for (const file of files) {
-    const bytes = fs.readFileSync(path.join(dir, file));
+  for (const filePath of files) {
+    const file = path.basename(filePath);
+    const bytes = fs.readFileSync(filePath);
     const shot = (await api("POST", "/appScreenshots", {
       data: {
         type: "appScreenshots",
@@ -445,7 +461,7 @@ async function uploadScreenshots(localizationId, locale) {
         attributes: { uploaded: true, sourceFileChecksum: crypto.createHash("md5").update(bytes).digest("hex") },
       },
     });
-    console.log(`  ${locale} : ${file} envoyée`);
+    console.log(`  ${locale} : ${file} envoyée (${displayType})`);
   }
 }
 

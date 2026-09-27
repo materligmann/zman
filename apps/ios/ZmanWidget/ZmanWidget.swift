@@ -60,7 +60,16 @@ struct ZmanWidget: Widget {
         }
         .configurationDisplayName(t.widgetName)
         .description(t.widgetDescription)
-        .supportedFamilies([.systemSmall, .systemMedium, .accessoryRectangular, .accessoryCircular, .accessoryInline])
+        .supportedFamilies(families)
+    }
+
+    private var families: [WidgetFamily] {
+        #if os(watchOS)
+        // Complications du cadran (même extension, compilée pour la montre).
+        [.accessoryRectangular, .accessoryCircular, .accessoryCorner, .accessoryInline]
+        #else
+        [.systemSmall, .systemMedium, .accessoryRectangular, .accessoryCircular, .accessoryInline]
+        #endif
     }
 }
 
@@ -69,6 +78,7 @@ struct ZmanWidgetBundle: WidgetBundle {
     var body: some Widget { ZmanWidget() }
 }
 
+#if !os(watchOS)
 #Preview(as: .systemSmall) {
     ZmanWidget()
 } timeline: {
@@ -76,3 +86,4 @@ struct ZmanWidgetBundle: WidgetBundle {
     let m = Moment(rega: 4163021922875)
     ZmanEntry(date: .now, moment: m, hourStart: clock.date(atRega: m.hourStart), hourEnd: clock.date(atRega: m.hourEnd))
 }
+#endif

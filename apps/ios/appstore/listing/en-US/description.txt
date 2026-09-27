@@ -9,6 +9,7 @@ That is why Zman does not follow the atomic clock but UT1, the time scale that f
 • The number of rega’im since the epoch, the molad Tohu
 • The state of the measurement: age of the IERS data, measured or predicted
 • A home screen widget, with the elapsed part of the hour
+• An Apple Watch app, with complications for your watch face: the Hebrew date and the hour of the day on your wrist
 • In English, French and Hebrew
 
 The calendar is computed from the rules of the fixed calendar (molad, dehiyot), checked by tests. Method and sources: zman.technology/en/methode.

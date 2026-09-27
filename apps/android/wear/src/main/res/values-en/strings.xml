@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="lang" translatable="false">en</string>
+    <string name="hour">hour</string>
+    <string name="chelek">chelek</string>
+    <string name="rega">rega</string>
+    <string name="hour_n">hour %d</string>
+    <string name="syncing">Synchronising…</string>
+    <string name="measured">measured</string>
+    <string name="predicted">predicted</string>
+    <string name="data_age">IERS data is %1$d days old, %2$s.</string>
+    <string name="fallback">No IERS data: UT1 approximated by the machine clock.</string>
+    <string name="offline">Server unreachable: local interpolation only.</string>
+    <string name="never_synced">Never synchronised: device clock only (UT1 ≈ UTC).</string>
+    <string name="complication_name">Zman: date and hour of the day</string>
+</resources>

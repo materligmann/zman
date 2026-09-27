@@ -3,8 +3,13 @@ import UIKit
 import ZmanCore
 
 // Encre, papier, un accent : les couleurs de web/static/css/site.css.
+// Sur la montre, toujours sombre, le papier est noir (écran OLED).
 enum Theme {
+    #if os(watchOS)
+    static let paper = Color.black
+    #else
     static let paper = dynamic(0xf7f3ea, 0x16140f)
+    #endif
     static let paper2 = dynamic(0xefe9dc, 0x1f1c15)
     static let ink = dynamic(0x1d1a15, 0xe9e2d3)
     static let ink2 = dynamic(0x5a544a, 0xa89f8c)
@@ -41,7 +46,11 @@ enum Theme {
     }
 
     private static func dynamic(_ light: UInt32, _ dark: UInt32) -> Color {
+        #if os(watchOS)
+        Color(rgb(dark))
+        #else
         Color(UIColor { $0.userInterfaceStyle == .dark ? rgb(dark) : rgb(light) })
+        #endif
     }
 
     private static func rgb(_ v: UInt32) -> UIColor {
