@@ -12,7 +12,7 @@ from PIL import Image, ImageChops, ImageDraw
 ROOT = os.path.join(os.path.dirname(__file__), "..")
 FONTS = os.path.join(ROOT, "web", "static", "fonts")
 IOS = os.path.join(ROOT, "apps", "ios")
-ANDROID = os.path.join(ROOT, "apps", "android", "app", "src", "main", "res")
+ANDROID = os.path.join(ROOT, "apps", "android", "core", "src", "main", "res")  # partagé téléphone / Wear OS
 PAPER, ACCENT = "#f7f3ea", "#8d2b1c"
 
 # Polices TTF pour les apps (iOS et Android ne lisent pas le woff2).

@@ -8,3 +8,4 @@ keystore/
 keystore.properties
 publish/play-service-account.json
 publish/.venv/
+publish/__pycache__/

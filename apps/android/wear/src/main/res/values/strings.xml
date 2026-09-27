@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Français (langue par défaut, comme le site). Textes de l'app téléphone. -->
+<resources>
+    <string name="lang" translatable="false">fr</string>
+    <string name="app_name" translatable="false">Zman</string>
+    <string name="hour">heure</string>
+    <string name="chelek">chelek</string>
+    <string name="rega">rega</string>
+    <string name="hour_n">heure %d</string>
+    <string name="syncing">Synchronisation…</string>
+    <string name="measured">mesurée</string>
+    <string name="predicted">prédite</string>
+    <string name="data_age">Donnée IERS vieille de %1$d jours, %2$s.</string>
+    <string name="fallback">Sans donnée IERS : UT1 approché par l’horloge de la machine.</string>
+    <string name="offline">Serveur injoignable : interpolation locale seulement.</string>
+    <string name="never_synced">Jamais synchronisé : horloge de l’appareil seule (UT1 ≈ UTC).</string>
+    <string name="complication_name">Zman : date et heure du jour</string>
+</resources>

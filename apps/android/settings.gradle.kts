@@ -13,4 +13,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Zman"
-include(":app")
+include(":app", ":core", ":wear")

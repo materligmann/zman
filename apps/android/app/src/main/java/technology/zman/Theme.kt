@@ -11,6 +11,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontVariation
 import androidx.compose.ui.text.font.FontWeight
+import technology.zman.core.R
 
 // Encre, papier, un accent : les couleurs de web/static/css/site.css.
 @Immutable
@@ -38,7 +39,7 @@ val LocalPalette = staticCompositionLocalOf { LightPalette }
 @Composable
 fun palette(): Palette = if (isSystemInDarkTheme()) DarkPalette else LightPalette
 
-// Polices du site (sous-ensembles latin et hébreu), en police variable.
+// Polices du site (sous-ensembles latin et hébreu), en police variable ; dans le module core.
 @OptIn(ExperimentalTextApi::class)
 private fun garamond(weight: Int) = Font(
     R.font.eb_garamond, FontWeight(weight),

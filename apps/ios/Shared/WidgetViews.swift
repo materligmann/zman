@@ -36,8 +36,13 @@ struct ZmanWidgetView: View {
             case .accessoryInline: inline
             case .accessoryCircular: circular
             case .accessoryRectangular: rectangular
+            #if os(watchOS)
+            case .accessoryCorner: corner
+            default: circular
+            #else
             case .systemMedium: medium
             default: small
+            #endif
             }
         }
         .containerBackground(for: .widget) { Theme.paper }
@@ -175,6 +180,23 @@ struct ZmanWidgetView: View {
         .progressViewStyle(.circular)
         .widgetAccentable()
     }
+
+    #if os(watchOS)
+    // Coin du cadran : le numéro de l'heure, la part écoulée en arc.
+    private var corner: some View {
+        Text(String(m.hour))
+            .font(Theme.serif(22, weight: 500))
+            .widgetCurvesContent()
+            .widgetLabel {
+                ProgressView(timerInterval: entry.hourStart...entry.hourEnd, countsDown: false) {
+                    EmptyView()
+                } currentValueLabel: {
+                    EmptyView()
+                }
+                .tint(Theme.accent)
+            }
+    }
+    #endif
 
     private var inline: some View {
         Text(m.date.map { d in

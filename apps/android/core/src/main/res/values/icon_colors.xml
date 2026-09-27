@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Icône et polices partagées par l'app téléphone et l'app Wear OS. -->
+<resources>
+    <color name="accent_icon">#8D2B1C</color>
+    <color name="icon_paper">#F7F3EA</color>
+</resources>

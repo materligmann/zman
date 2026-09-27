@@ -4,12 +4,13 @@ options:
   bundleIdPrefix: studio.100-8
   deploymentTarget:
     iOS: "17.0"
+    watchOS: "10.0"
   developmentLanguage: fr
   createIntermediateGroups: true
 settings:
   base:
     MARKETING_VERSION: "1.0"
-    CURRENT_PROJECT_VERSION: "2"
+    CURRENT_PROJECT_VERSION: "3"
     SWIFT_VERSION: "5.0"
     DEVELOPMENT_TEAM: BAJCWWQ6Q6
     CODE_SIGN_STYLE: Automatic
@@ -26,6 +27,7 @@ targets:
     dependencies:
       - package: ZmanCore
       - target: ZmanWidget
+      - target: ZmanWatch
     entitlements:
       path: Zman/Zman.entitlements
       properties:
@@ -75,11 +77,73 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: studio.100-8.zman.widget
         TARGETED_DEVICE_FAMILY: "1"
         SKIP_INSTALL: YES
+  # App Apple Watch, embarquée dans l'app iOS (même fiche App Store) ; ses
+  # complications sont l'extension de widgets, recompilée pour watchOS. Pas de
+  # groupe d'apps côté montre : l'extension se recale seule sur le serveur.
+  ZmanWatch:
+    type: application
+    platform: watchOS
+    sources:
+      - ZmanWatch
+      - Shared
+      - Zman/ClockModel.swift
+    dependencies:
+      - package: ZmanCore
+      - target: ZmanWatchWidget
+    info:
+      path: ZmanWatch/Info.plist
+      properties:
+        CFBundleDisplayName: Zman
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        CFBundleLocalizations: [fr, en, he]
+        UIAppFonts: [EBGaramond-latin.ttf, EBGaramond-italic-latin.ttf, FrankRuhlLibre-hebrew.ttf]
+        WKApplication: true
+        WKCompanionAppBundleIdentifier: studio.100-8.zman
+        ITSAppUsesNonExemptEncryption: false
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: studio.100-8.zman.watchkitapp
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        TARGETED_DEVICE_FAMILY: "4"
+  ZmanWatchWidget:
+    type: app-extension
+    platform: watchOS
+    sources:
+      - ZmanWidget/ZmanWidget.swift
+      - Shared
+    dependencies:
+      - package: ZmanCore
+      - sdk: WidgetKit.framework
+      - sdk: SwiftUI.framework
+    info:
+      path: ZmanWatchWidget/Info.plist
+      properties:
+        CFBundleDisplayName: Zman
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        UIAppFonts: [EBGaramond-latin.ttf, EBGaramond-italic-latin.ttf, FrankRuhlLibre-hebrew.ttf]
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: studio.100-8.zman.watchkitapp.widget
+        TARGETED_DEVICE_FAMILY: "4"
+        SKIP_INSTALL: YES
 schemes:
   Zman:
     build:
       targets:
         Zman: all
         ZmanWidget: all
+        ZmanWatch: all
+        ZmanWatchWidget: all
     test:
       targets: []
+  ZmanWatch:
+    build:
+      targets:
+        ZmanWatch: all
+        ZmanWatchWidget: all
+    run:
+      config: Debug

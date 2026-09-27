@@ -3,5 +3,6 @@ Zman shows the current moment in the traditional Jewish time system (Hebrew date
 No account, no login, no in-app purchase, no permissions requested. All features are available immediately.
 
 The app includes a home screen / lock screen widget (Zman): long-press the home screen, tap "+" or "Edit", search "Zman".
+The Apple Watch app installs with the iPhone app. Its complications (Zman) are added from the watch face editor: long-press the watch face, Edit, Complications.
 
 The interface follows the device language (French, English or Hebrew). Method and sources: https://zman.technology/en/methode

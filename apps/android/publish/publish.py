@@ -3,6 +3,7 @@
 
     .venv/bin/python publish.py listing            # fiche : textes + visuels (fr-FR, en-US)
     .venv/bin/python publish.py upload [--track internal|alpha|beta|production] [--notes "…"] [--draft]
+    .venv/bin/python publish.py upload --wear [--track production]   # app Wear OS, piste wear:<track>
     .venv/bin/python publish.py status             # pistes et versions en ligne
 
 Prérequis, une fois : l'app créée dans la Play Console, et le compte de service
@@ -33,10 +34,13 @@ PLAY = ANDROID / "play"
 PACKAGE = "studiocentmoinshuit.zman"
 SA_KEY = ROOT / "play-service-account.json"
 AAB = ANDROID / "app/build/outputs/bundle/release/app-release.aab"
+WEAR_AAB = ANDROID / "wear/build/outputs/bundle/release/wear-release.aab"
 
 # Locales de la fiche : dossier play/listing/<locale>/ avec title.txt,
-# short.txt, full.txt, et play/out/<locale>/ pour les captures.
+# short.txt, full.txt, et play/out/<locale>/ pour les captures. Les captures
+# Wear OS, brutes (454 × 454), sont dans play/wear/<lang>-<n>-<nom>.png.
 LOCALES = ["fr-FR", "en-US", "iw-IL"]
+LANG = {"fr-FR": "fr", "en-US": "en", "iw-IL": "he"}
 
 
 def service():
@@ -105,6 +109,7 @@ def cmd_listing(args) -> None:
             "icon": [PLAY / "out" / "icon-512.png"],
             "featureGraphic": [PLAY / "out" / "feature-1024x500.png"],
             "phoneScreenshots": sorted((PLAY / "out" / locale).glob("*.png")),
+            "wearScreenshots": sorted((PLAY / "wear").glob(f"{LANG[locale]}-*.png")),
         }.items():
             files = [f for f in files if f.exists()]
             if not files:
@@ -123,15 +128,19 @@ def cmd_listing(args) -> None:
 
 
 def cmd_upload(args) -> None:
-    if not AAB.exists():
-        sys.exit(f"AAB introuvable : {AAB} — lancer ./gradlew bundleRelease")
+    # L'app Wear OS a sa propre piste (wear:production…), dans la même fiche.
+    aab = WEAR_AAB if args.wear else AAB
+    if args.wear:
+        args.track = f"wear:{args.track}"
+    if not aab.exists():
+        sys.exit(f"AAB introuvable : {aab} — lancer ./gradlew bundleRelease")
     api = service()
     edits = api.edits()
     edit_id = edits.insert(packageName=PACKAGE, body={}).execute()["id"]
 
     bundle = edits.bundles().upload(
         packageName=PACKAGE, editId=edit_id,
-        media_body=MediaFileUpload(str(AAB), mimetype="application/octet-stream", resumable=True),
+        media_body=MediaFileUpload(str(aab), mimetype="application/octet-stream", resumable=True),
     ).execute()
     code = bundle["versionCode"]
     print(f"AAB envoyé : versionCode {code}")
@@ -165,7 +174,7 @@ def cmd_status(args) -> None:
     tracks = edits.tracks().list(packageName=PACKAGE, editId=edit_id).execute()
     for t in tracks.get("tracks", []):
         for r in t.get("releases", []):
-            print(f"{t['track']:12} {r.get('status'):10} versionCodes={r.get('versionCodes')} "
+            print(f"{t['track']:17} {r.get('status'):10} versionCodes={r.get('versionCodes')} "
                   f"{r.get('name', '')}")
     if not tracks.get("tracks"):
         print("aucune version sur aucune piste")
@@ -180,6 +189,7 @@ def main() -> None:
     up.add_argument("--track", default="internal", choices=["internal", "alpha", "beta", "production"])
     up.add_argument("--notes", default="")
     up.add_argument("--draft", action="store_true", help="release en brouillon (obligatoire pour la toute première)")
+    up.add_argument("--wear", action="store_true", help="envoyer l'app Wear OS (wear/) sur la piste wear:<track>")
     up.set_defaults(fn=cmd_upload)
     sub.add_parser("status").set_defaults(fn=cmd_status)
     args = p.parse_args()

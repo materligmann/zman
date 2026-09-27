@@ -275,20 +275,28 @@ Le widget affiche la date hébraïque, le jour de la semaine, l'heure du jour
 et la part écoulée de l'heure ; il est redessiné à chaque début d'heure
 (timeline WidgetKit ; WorkManager sur Android).
 
+Montres : `apps/ios/ZmanWatch` (app Apple Watch, embarquée dans l'app iOS ; ses
+complications sont l'extension `ZmanWidget` recompilée pour watchOS, cible
+`ZmanWatchWidget`) et `apps/android/wear` (Wear OS : app, tuile et complications,
+autonome). Sur Android, le noyau partagé est le module `apps/android/core`
+(portages, synchronisation, calibration, polices et icône).
+
 ```
 cd apps/ios/ZmanCore && swift test          # noyau Swift
 cd apps/ios && xcodegen generate && open Zman.xcodeproj
-cd apps/android && ./gradlew testDebugUnitTest assembleDebug
+cd apps/android && ./gradlew testDebugUnitTest assembleDebug   # :core, :app, :wear
 ```
 
 En debug, l'app iOS lancée avec l'argument `-widgetGallery` montre toutes
-les tailles du widget. Icônes et polices TTF : `scripts/gen-app-icons.py`.
+les tailles du widget (l'app montre, les complications). Icônes et polices TTF : `scripts/gen-app-icons.py`.
 
 ### Publication
 
 Identifiants : iOS `studio.100-8.zman` (widget `studio.100-8.zman.widget`, groupe
-`group.studio.100-8.zman`, équipe BAJCWWQ6Q6), Android `studiocentmoinshuit.zman`
-(« studio.100-8… » n'est pas un nom de paquet Android valide). Noms : « Zman — temps
+`group.studio.100-8.zman`, équipe BAJCWWQ6Q6 ; montre `studio.100-8.zman.watchkitapp`
+et `….watchkitapp.widget`, sans groupe d'apps), Android `studiocentmoinshuit.zman`
+(« studio.100-8… » n'est pas un nom de paquet Android valide), le même pour
+l'app Wear OS, avec des `versionCode` à partir de 1001. Noms : « Zman — temps
 juif » sur l'App Store (« Zman » y était pris), « Zman » sur Google Play.
 
 Tout passe par les API des stores, sur le modèle de Midbar. Les clés sont hors git :
@@ -306,9 +314,10 @@ node apps/ios/publish/asc.mjs status
 node apps/ios/publish/asc.mjs withdraw        # retire une soumission en attente, pour envoyer un autre build
 
 # Android — incrémenter versionCode/versionName dans apps/android/app/build.gradle.kts
-cd apps/android && ./gradlew bundleRelease
-publish/.venv/bin/python publish/publish.py listing    # textes + visuels (play/listing, play/out)
+cd apps/android && ./gradlew bundleRelease     # app/ et wear/
+publish/.venv/bin/python publish/publish.py listing    # textes + visuels (play/listing, play/out, play/wear)
 publish/.venv/bin/python publish/publish.py upload --track production
+publish/.venv/bin/python publish/publish.py upload --wear --track production   # piste wear:production
 publish/.venv/bin/python publish/publish.py status
 ```
 
@@ -316,9 +325,13 @@ Captures : les brutes sont dans `apps/ios/appstore/captures` (simulateur iPhone
 16 Pro Max, 1320 × 2868) et `apps/android/play/captures` (émulateur), nommées
 `<fr|en|he>-<n>-<clock|dark|widgets|widget>.png` ; `scripts/render-store-shots.py`
 compose les visuels finaux (légende + capture), l'icône 512 et la bannière Play.
+Les captures des montres sont envoyées brutes : `apps/ios/appstore/watch`
+(Apple Watch Series 11 46 mm, 416 × 496) et `apps/android/play/wear` (émulateur
+Wear OS rond, 454 × 454).
 
 Faits une fois à la main, l'API ne les exposant pas : création des deux fiches,
 « Confidentialité de l'app » sur App Store Connect (aucune donnée collectée),
 questionnaires de la Play Console (classification IARC, public 13 ans et plus,
-sécurité des données, catégorie Outils, 177 pays) et droits du compte de service
+sécurité des données, catégorie Outils, 177 pays), ajout du format Wear OS
+(Tester et publier → Paramètres avancés → Formats) et droits du compte de service
 `play-publisher@generative-news-470721` sur Zman.
