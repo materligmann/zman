@@ -22,26 +22,38 @@ import kotlin.math.abs
 data class SyncState(val calibration: Calibration?, val offline: Boolean)
 
 class MainActivity : ComponentActivity() {
+    companion object {
+        /**
+         * Onglet de départ, pour les captures des stores :
+         * `adb shell am start -n studiocentmoinshuit.zman/technology.zman.MainActivity --ei tab 2`.
+         */
+        const val EXTRA_TAB = "tab"
+    }
+
     private lateinit var store: CalibrationStore
+    private lateinit var settings: Settings
     private val state = MutableStateFlow(SyncState(null, false))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         store = CalibrationStore(this)
+        settings = Settings(this)
         state.value = SyncState(store.load(), false)
         // Le widget suit la langue de l'app : un changement de langue recrée l'activité.
         WidgetUpdater.refresh(this)
 
         setContent {
             CompositionLocalProvider(LocalPalette provides palette()) {
-                ClockScreen(state, lang())
+                Root(state, settings, lang(), initialTab = intent.getIntExtra(EXTRA_TAB, 0))
             }
         }
 
         // Au premier plan : synchroniser tout de suite, puis chaque minute.
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // Les rappels ne couvrent que les 60 prochains : les renouveler à chaque retour.
+                if (settings.anyReminder) withContext(Dispatchers.Default) { Reminders.reschedule(this@MainActivity) }
                 while (true) {
                     sync()
                     delay(60_000)

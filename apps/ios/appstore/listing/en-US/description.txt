@@ -4,12 +4,16 @@ The day begins at 18:00, Jerusalem mean time. It has 24 hours; each hour, 1,080 
 
 That is why Zman does not follow the atomic clock but UT1, the time scale that follows the Earth’s rotation as measured by the IERS. The app counts rega’im on your phone and regularly re-syncs with the zman.technology server, which applies the measured correction. Offline, it carries on with the last known correction.
 
-• The Hebrew date in letters and numbers, the day of the week
-• Hour · chelek · rega, live
-• The number of rega’im since the epoch, the molad Tohu
+• The clock: the Hebrew date in letters and numbers, the day of the week, hour · chelek · rega live, and the number of rega’im since the molad Tohu
+• The luach: each Hebrew month as a grid, Sunday to Shabbat, with Rosh Chodesh, festivals, the Omer count and the month’s molad
+• The year’s festivals and fasts, postponements included (fasts moved after Shabbat, Ta’anit Esther brought forward, Yom HaAtzmaut), in Israel or the diaspora, with a countdown to the next one in days, hours and chalakim
+• The molad: a countdown to the next one, and every molad of the year in the format of the Birkat HaChodesh announcement
+• The structure of the year: length, common or leap, keviah, place in the nineteen-year cycle
+• Reminders, if you want them: the evening before Rosh Chodesh and festivals, and at the moment of the molad, scheduled on the device
+• The manifesto, the method and their sources, to read in the app
 • The state of the measurement: age of the IERS data, measured or predicted
-• A home screen widget, with the elapsed part of the hour
-• An Apple Watch app, with complications for your watch face: the Hebrew date and the hour of the day on your wrist
+• A widget for the Home Screen and Lock Screen, with the elapsed part of the hour
+• An Apple Watch app, with complications for your watch face
 • In English, French and Hebrew
 
 The calendar is computed from the rules of the fixed calendar (molad, dehiyot), checked by tests. Method and sources: zman.technology/en/methode.

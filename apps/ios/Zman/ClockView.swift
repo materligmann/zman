@@ -6,11 +6,21 @@ import ZmanCore
 /// grégorienne ni heure civile.
 struct ClockView: View {
     let model: ClockModel
+    let settings: Settings
     let lang: Lang
 
     private var t: Strings { .of(lang) }
+    private var tr: Tr { Tr(lang) }
 
     var body: some View {
+        NavigationStack {
+            clock
+                .toolbar(.hidden, for: .navigationBar)
+                .navigationDestination(for: Page.self) { ReaderView(page: $0, lang: lang) }
+        }
+    }
+
+    private var clock: some View {
         ScrollView {
             TimelineView(.animation(minimumInterval: 0.04)) { context in
                 let m = model.clock.moment(at: context.date)
@@ -22,13 +32,15 @@ struct ClockView: View {
                         .padding(.top, 36)
                     quality
                         .padding(.top, 26)
-                    Link(t.why, destination: lang.siteURL("manifeste"))
-                        .font(Theme.text(lang, 17))
-                        .foregroundStyle(Theme.ink)
-                        .underline(color: Theme.accent)
+                    today(m)
                         .padding(.top, 34)
-                    widget
-                        .padding(.top, 36)
+                    NavigationLink(value: Page.manifeste) {
+                        Text(t.why)
+                            .font(Theme.text(lang, 17))
+                            .foregroundStyle(Theme.ink)
+                            .underline(color: Theme.accent)
+                    }
+                    .padding(.top, 30)
                     note
                         .padding(.top, 40)
                 }
@@ -125,16 +137,31 @@ struct ClockView: View {
         }
     }
 
-    /// Le widget n'est visible nulle part ailleurs : l'app le signale.
-    private var widget: some View {
-        VStack(spacing: 8) {
-            SmallCaps(t.widgetTitle, lang: lang, size: 15, tracking: 1.6)
-                .foregroundStyle(Theme.accent)
-            Text(t.widgetHint)
-                .font(Theme.text(lang, 15, .footnote))
-                .foregroundStyle(Theme.ink2)
+    /// Ce que le jour porte (fêtes, Roch Hodech, omer), et la prochaine fête.
+    private func today(_ m: Moment) -> some View {
+        let obs = Moadim.on(m.day, israel: settings.israel)
+        let next = m.date.flatMap { d in
+            (Moadim.year(d.year, israel: settings.israel) + Moadim.year(d.year + 1, israel: settings.israel))
+                .first { $0.start > m.day && $0.feast.kind != .roshChodesh && $0.feast.kind != .cholHamoed }
         }
-        .frame(maxWidth: 480)
+        return VStack(spacing: 6) {
+            ForEach(obs, id: \.self) { o in
+                let y = Luach.date(ofDay: o.start)?.year ?? 0
+                Text(lang == .he ? o.nameHe(year: y) : "\(o.name(lang, year: y)) · \(o.nameHe(year: y))")
+                    .font(Theme.text(lang, 19, weight: 500))
+                    .foregroundStyle(Theme.accent)
+            }
+            if let n = Moadim.omer(m.day) {
+                Text(tr.omer(n)).font(Theme.text(lang, 16)).foregroundStyle(Theme.accent)
+            }
+            if let next, let y = Luach.date(ofDay: next.start)?.year {
+                Text(tr("\(next.name(lang, year: y)), \(tr.days(next.start - m.day))",
+                        "\(next.name(lang, year: y)), \(tr.days(next.start - m.day))",
+                        "\(next.nameHe(year: y)), \(tr.days(next.start - m.day))"))
+                    .font(Theme.text(lang, 16))
+                    .foregroundStyle(Theme.ink2)
+            }
+        }
     }
 
     private var note: some View {

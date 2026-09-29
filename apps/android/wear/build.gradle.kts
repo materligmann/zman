@@ -17,7 +17,7 @@ android {
         minSdk = 30 // Wear OS 3
         targetSdk = 36
         // Codes de version uniques dans toute l'app Play : 1000 + n pour la montre.
-        versionCode = 1002
+        versionCode = 1004
         versionName = "1.0"
     }
 
@@ -64,6 +64,8 @@ dependencies {
     implementation(composeBom)
     implementation("androidx.compose.ui:ui")
     implementation("androidx.wear.compose:compose-foundation:1.5.0")
+    // Scaffold et PositionIndicator : la barre de défilement exigée par Google Play.
+    implementation("androidx.wear.compose:compose-material:1.5.0")
     implementation("androidx.activity:activity-compose:1.10.1")
     implementation("androidx.core:core-ktx:1.16.0")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.9.1")

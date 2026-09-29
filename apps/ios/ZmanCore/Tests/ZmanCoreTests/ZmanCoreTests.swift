@@ -145,3 +145,78 @@ final class NamesTests: XCTestCase {
         XCTAssertEqual(Lang.preferred(["de"]), .fr)
     }
 }
+
+// Dates vérifiées contre hebcal (jour de la semaine, reports compris).
+final class MoadimTests: XCTestCase {
+    func first(_ f: Feast, _ y: Int64, israel: Bool = false) -> Observance {
+        Moadim.year(y, israel: israel).first { $0.feast == f }!
+    }
+
+    func date(_ o: Observance) -> HebrewDate { Luach.date(ofDay: o.start)! }
+
+    func testFixedFeasts() {
+        XCTAssertEqual(Luach.weekday(first(.tzomGedalia, 5786).start), Luach.thursday)
+        XCTAssertEqual(Luach.weekday(first(.chanukah, 5786).start), Luach.monday)
+        XCTAssertEqual(first(.chanukah, 5786).length, 8)
+        XCTAssertEqual(Luach.weekday(first(.purim, 5786).start), Luach.tuesday)
+        XCTAssertEqual(Luach.weekday(first(.yomHashoah, 5786).start), Luach.tuesday)
+        XCTAssertEqual(Luach.weekday(first(.yomHaatzmaut, 5786).start), Luach.wednesday)
+    }
+
+    func testPostponements() {
+        // 9 Av 5782 est un Chabbat : jeûne le dimanche 10 Av.
+        XCTAssertEqual(date(first(.tishaBeAv, 5782)), HebrewDate(year: 5782, month: Luach.av, day: 10))
+        // Pourim 5784 un dimanche : Ta'anit Esther avancé au jeudi 11 Adar II.
+        XCTAssertEqual(date(first(.taanitEsther, 5784)), HebrewDate(year: 5784, month: Luach.adarII, day: 11))
+        // 5 Iyar 5785 un Chabbat : Yom HaAtsmaout le jeudi 3 Iyar.
+        XCTAssertEqual(date(first(.yomHaatzmaut, 5785)), HebrewDate(year: 5785, month: Luach.iyar, day: 3))
+        XCTAssertEqual(date(first(.yomHazikaron, 5785)), HebrewDate(year: 5785, month: Luach.iyar, day: 2))
+        // 5 Iyar 5784 un lundi : Yom HaAtsmaout le mardi 6 Iyar.
+        XCTAssertEqual(date(first(.yomHaatzmaut, 5784)), HebrewDate(year: 5784, month: Luach.iyar, day: 6))
+    }
+
+    func testIsraelAndDiaspora() {
+        XCTAssertEqual(first(.pesach, 5786).length, 2)
+        XCTAssertEqual(first(.pesach, 5786, israel: true).length, 1)
+        XCTAssertEqual(first(.cholHamoedPesach, 5786).end, first(.shviiShelPesach, 5786).start)
+        XCTAssertEqual(first(.cholHamoedPesach, 5786, israel: true).end, first(.shviiShelPesach, 5786, israel: true).start)
+        XCTAssertTrue(Moadim.year(5786, israel: true).allSatisfy { $0.feast != .simchatTorah })
+    }
+
+    func testRoshChodesh() {
+        for y: Int64 in 5780...5800 {
+            let rc = Moadim.year(y, israel: false).filter { $0.feast == .roshChodesh }
+            XCTAssertEqual(rc.count, Luach.monthsInYear(y) - 1)
+            for o in rc { XCTAssertEqual(Luach.date(ofDay: o.end - 1)!.day, 1) }
+        }
+        // Tous les jours d'une fête tombent dans l'année.
+        let o = Moadim.on(Luach.day(of: HebrewDate(year: 5786, month: Luach.tevet, day: 1))!, israel: false)
+        XCTAssertEqual(o.map(\.feast), [.chanukah, .roshChodesh])
+    }
+
+    func testOmer() {
+        let d16 = Luach.day(of: HebrewDate(year: 5786, month: Luach.nissan, day: 16))!
+        XCTAssertEqual(Moadim.omer(d16), 1)
+        XCTAssertEqual(Moadim.omer(d16 + 48), 49)
+        XCTAssertNil(Moadim.omer(d16 + 49))
+        XCTAssertNil(Moadim.omer(d16 - 1))
+        XCTAssertEqual(Luach.date(ofDay: d16 + 49), HebrewDate(year: 5786, month: Luach.sivan, day: 6))
+    }
+
+    func testYearInfo() {
+        let y = YearInfo(5786)
+        XCTAssertEqual(y.length, 354)
+        XCTAssertEqual(y.keviah, "גכה")
+        XCTAssertEqual(y.months.count, 12)
+        XCTAssertEqual(y.months.map(\.length).reduce(0, +), 354)
+        XCTAssertEqual(YearInfo(5787).yearInCycle, 11)
+        XCTAssertTrue(YearInfo(5787).isLeap)
+    }
+
+    func testMoladAnnouncement() {
+        // Molad Tichri 5786 : lundi, 18 h 187 ch = « lundi 12:10 et 7 chalakim ».
+        let a = MoladAnnouncement(rega: Luach.molad(year: 5786, month: Luach.tishrei)!)
+        XCTAssertEqual(a.weekday, Luach.monday); XCTAssertFalse(a.evening)
+        XCTAssertEqual(a.clockHour, 12); XCTAssertEqual(a.minute, 10); XCTAssertEqual(a.chalakim, 7)
+    }
+}

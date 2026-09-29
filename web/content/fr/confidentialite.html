@@ -3,7 +3,7 @@
 <p class="lede">zman ne vous demande rien et ne garde rien de vous. Cette page vaut pour le site, l’API et les apps iPhone et Android.</p>
 
 <h2>Ce qui n’existe pas</h2>
-<p>Pas de compte, pas d’inscription, pas de publicité, pas de mesure d’audience, pas de pisteur, pas de SDK tiers. Les apps ne demandent aucune autorisation : ni position, ni contacts, ni notifications.</p>
+<p>Pas de compte, pas d’inscription, pas de publicité, pas de mesure d’audience, pas de pisteur, pas de SDK tiers. Les apps ne demandent ni position ni contacts. L’app iPhone propose des rappels (Roch Hodech, fêtes, molad) : seulement si vous les activez, elle demande l’autorisation d’envoyer des notifications, et les programme sur l’appareil lui-même ; aucun serveur n’intervient.</p>
 
 <h2>Ce qui circule</h2>
 <p>Pour se recaler sur la rotation de la Terre, le site et les apps interrogent régulièrement <code>https://zman.technology/api/now</code>. Comme toute requête sur Internet, celle-ci porte l’adresse IP de l’appareil. Le serveur s’en sert seulement pour limiter le débit par adresse ; il ne l’enregistre dans aucune base. L’hébergeur (Google Cloud Run, région europe-west1) tient des journaux techniques des requêtes, conservés selon sa politique standard, que zman n’exploite pas.</p>

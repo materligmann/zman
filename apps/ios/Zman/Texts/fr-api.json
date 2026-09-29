@@ -1,0 +1,217 @@
+[
+ {
+  "t": "h1",
+  "s": "L’API"
+ },
+ {
+  "t": "lede",
+  "s": "Un timestamp juif autonome, en JSON ou en texte. Gratuit, sans clé, sans grégorien."
+ },
+ {
+  "t": "h2",
+  "s": "Principes"
+ },
+ {
+  "t": "ul",
+  "items": [
+   "Base : `/api/`. Réponses en JSON ; envoyez `Accept: text/plain` ou ajoutez `?format=text` pour du texte.",
+   "Pas de clé, pas d’inscription. CORS ouvert (`Access-Control-Allow-Origin: *`).",
+   "Limite de débit par adresse : 20 requêtes par unité de cadence, rafale de 60 ; au-delà, `429` avec `Retry-After`.",
+   "`Cache-Control: max-age=1` sur `/api/now` ; un jour sur les réponses purement arithmétiques.",
+   "Code sous licence MIT. Réponses de l’API sous licence [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.fr) : réutilisation libre avec attribution « zman, zman.technology »."
+  ]
+ },
+ {
+  "t": "h2",
+  "s": "Unités et constantes"
+ },
+ {
+  "t": "table",
+  "rows": [
+   [
+    "Nom",
+    "Valeur",
+    "Remarque"
+   ],
+   [
+    "rega’im par chelek",
+    "76",
+    "Rambam, Hilkhot Kiddoush ha-Hodesh 10:1"
+   ],
+   [
+    "chalakim par heure",
+    "1 080",
+    "ibid. 6:2"
+   ],
+   [
+    "heures par jour",
+    "24",
+    "depuis 18:00 temps moyen de Jérusalem"
+   ],
+   [
+    "rega’im par heure",
+    "82 080",
+    ""
+   ],
+   [
+    "chalakim par jour",
+    "25 920",
+    ""
+   ],
+   [
+    "rega’im par jour",
+    "1 969 920",
+    "toujours, quelle que soit la durée du jour"
+   ],
+   [
+    "epoch",
+    "rega 0",
+    "samedi 18:00 ouvrant la semaine du molad Tohou ; jour 0 = dimanche"
+   ],
+   [
+    "molad Tohou",
+    "2 395 824",
+    "jour 1, 5 h, 204 ch"
+   ],
+   [
+    "1 Tichri de l’an 1",
+    "jour 1",
+    "lundi"
+   ],
+   [
+    "mois",
+    "1 – 13",
+    "Nissan = 1 … Adar = 12 (Adar I en année embolismique), Adar II = 13"
+   ],
+   [
+    "jour de la semaine",
+    "0 – 6",
+    "dimanche = 0, Chabbat = 6"
+   ]
+  ]
+ },
+ {
+  "t": "h2",
+  "s": "Endpoints"
+ },
+ {
+  "t": "h3",
+  "s": "`GET /api/now`"
+ },
+ {
+  "t": "p",
+  "s": "L’instant présent : rega, jour, heure, chelek, rega dans le chelek, date, jour de la semaine, et qualité de l’horloge (`source` : `iers` ou `fallback` ; `dut1_age_days` : âge de la dernière mesure ; `predicted` : la valeur DUT1 est une prédiction)."
+ },
+ {
+  "t": "pre",
+  "s": "curl -s https://zman.technology/api/now"
+ },
+ {
+  "t": "pre",
+  "s": "{\n  \"rega\": 4163021922875,\n  \"day\": 2113294,\n  \"hour\": 22,\n  \"chelek\": 8,\n  \"rega_in_chelek\": 27,\n  \"date\": {\n    \"year\": 5786,\n    \"month\": 6,\n    \"month_name\": \"Elul\",\n    \"month_name_he\": \"אלול\",\n    \"day\": 25\n  },\n  \"weekday\": 1,\n  \"weekday_name_he\": \"יום שני\",\n  \"clock\": {\n    \"source\": \"iers\",\n    \"dut1_age_days\": 4.6,\n    \"predicted\": true\n  }\n}"
+ },
+ {
+  "t": "p",
+  "s": "En texte :"
+ },
+ {
+  "t": "pre",
+  "s": "curl -s -H 'Accept: text/plain' https://zman.technology/api/now"
+ },
+ {
+  "t": "pre",
+  "s": "rega     4163021922875\nday      2113294  hour 22  chelek 8  rega 27\ndate     25 Elul 5786 (אלול)\nweekday  1 יום שני\nclock    source=iers dut1_age_days=4.6 predicted=true"
+ },
+ {
+  "t": "h3",
+  "s": "`GET /api/rega/{n}`"
+ },
+ {
+  "t": "p",
+  "s": "Décode un entier en jour, heure, chelek, rega, date et jour de la semaine. Pour un jour antérieur au 1 Tichri de l’an 1, `date` vaut `null`. Exemple : le molad Tohou."
+ },
+ {
+  "t": "pre",
+  "s": "curl -s https://zman.technology/api/rega/2395824"
+ },
+ {
+  "t": "pre",
+  "s": "{\n  \"rega\": 2395824,\n  \"day\": 1,\n  \"hour\": 5,\n  \"chelek\": 204,\n  \"rega_in_chelek\": 0,\n  \"date\": {\n    \"year\": 1,\n    \"month\": 7,\n    \"month_name\": \"Tishrei\",\n    \"month_name_he\": \"תשרי\",\n    \"day\": 1\n  },\n  \"weekday\": 1,\n  \"weekday_name_he\": \"יום שני\"\n}"
+ },
+ {
+  "t": "h3",
+  "s": "`GET /api/date/{year}/{month}/{day}`"
+ },
+ {
+  "t": "p",
+  "s": "Le jour donné, avec son premier rega (`start`) et le premier rega du lendemain (`end`, exclusif). Erreur `400` si la date n’existe pas (30 Hechvan une année déficiente, Adar II une année commune, etc.)."
+ },
+ {
+  "t": "pre",
+  "s": "curl -s https://zman.technology/api/date/5787/7/1"
+ },
+ {
+  "t": "pre",
+  "s": "{\n  \"date\": {\n    \"year\": 5787,\n    \"month\": 7,\n    \"month_name\": \"Tishrei\",\n    \"month_name_he\": \"תשרי\",\n    \"day\": 1\n  },\n  \"day\": 2113299,\n  \"weekday\": 6,\n  \"weekday_name_he\": \"שבת\",\n  \"start\": 4163029966080,\n  \"end\": 4163031936000\n}"
+ },
+ {
+  "t": "h3",
+  "s": "`GET /api/molad/{year}/{month}`"
+ },
+ {
+  "t": "p",
+  "s": "Le molad moyen du mois, en rega et en parts. La convention est celle des annonces : heures comptées depuis 18:00 la veille. « Vendredi soir 20:59 et 1 chelek » apparaît donc comme jour de la semaine 6 (le jour halachique a commencé), 2 heures, 1 063 chalakim."
+ },
+ {
+  "t": "pre",
+  "s": "curl -s https://zman.technology/api/molad/5787/7"
+ },
+ {
+  "t": "pre",
+  "s": "{\n  \"rega\": 4163030211028,\n  \"day\": 2113299,\n  \"hour\": 2,\n  \"chelek\": 1063,\n  \"rega_in_chelek\": 0,\n  \"date\": {\n    \"year\": 5787,\n    \"month\": 7,\n    \"month_name\": \"Tishrei\",\n    \"month_name_he\": \"תשרי\",\n    \"day\": 1\n  },\n  \"weekday\": 6,\n  \"weekday_name_he\": \"שבת\"\n}"
+ },
+ {
+  "t": "h3",
+  "s": "`GET /api/year/{year}`"
+ },
+ {
+  "t": "p",
+  "s": "Longueur de l’année, caractère embolismique, Roch Hachana, et les mois dans l’ordre civil avec leur longueur et leur premier jour."
+ },
+ {
+  "t": "pre",
+  "s": "curl -s https://zman.technology/api/year/5787"
+ },
+ {
+  "t": "pre",
+  "s": "{\n  \"year\": 5787,\n  \"length\": 385,\n  \"leap\": true,\n  \"rosh_hashana\": {\n    \"day\": 2113299,\n    \"weekday\": 6,\n    \"weekday_name_he\": \"שבת\"\n  },\n  \"months\": [\n    {\n      \"month\": 7,\n      \"name\": \"Tishrei\",\n      \"name_he\": \"תשרי\",\n      \"length\": 30,\n      \"start_day\": 2113299\n    },\n    {\n      \"month\": 8,\n      \"name\": \"Cheshvan\",\n      \"name_he\": \"חשון\",\n      \"length\": 30,\n      \"start_day\": 2113329\n    },\n    {\n      \"month\": 9,\n      \"name\": \"Kislev\",\n      \"name_he\": \"כסלו\",\n      \"length\": 30,\n      \"start_day\": 2113359\n    },\n    {\n      \"month\": 10,\n      \"name\": \"Tevet\",\n      \"name_he\": \"טבת\",\n      \"length\": 29,\n      \"start_day\": 2113389\n    },\n    {\n      \"month\": 11,\n      \"name\": \"Shevat\",\n      \"name_he\": \"שבט\",\n      \"length\": 30,\n      \"start_day\": 2113418\n    },\n    {\n      \"month\": 12,\n      \"name\": \"Adar I\",\n      \"name_he\": \"אדר א׳\",\n      \"length\": 30,\n      \"start_day\": 2113448\n    },\n    {\n      \"month\": 13,\n      \"name\": \"Adar II\",\n      \"name_he\": \"אדר ב׳\",\n      \"length\": 29,\n      \"start_day\": 2113478\n    },\n    {\n      \"month\": 1,\n      \"name\": \"Nissan\",\n      \"name_he\": \"ניסן\",\n      \"length\": 30,\n      \"start_day\": 2113507\n    },\n    {\n      \"month\": 2,\n      \"name\": \"Iyar\",\n      \"name_he\": \"אייר\",\n      \"length\": 29,\n      \"start_day\": 2113537\n    },\n    {\n      \"month\": 3,\n      \"name\": \"Sivan\",\n      \"name_he\": \"סיון\",\n      \"length\": 30,\n      \"start_day\": 2113566\n    },\n    {\n      \"month\": 4,\n      \"name\": \"Tammuz\",\n      \"name_he\": \"תמוז\",\n      \"length\": 29,\n      \"start_day\": 2113596\n    },\n    {\n      \"month\": 5,\n      \"name\": \"Av\",\n      \"name_he\": \"אב\",\n      \"length\": 30,\n      \"start_day\": 2113625\n    },\n    {\n      \"month\": 6,\n      \"name\": \"Elul\",\n      \"name_he\": \"אלול\",\n      \"length\": 29,\n      \"start_day\": 2113655\n    }\n  ]\n}"
+ },
+ {
+  "t": "h3",
+  "s": "`GET /api/health`"
+ },
+ {
+  "t": "p",
+  "s": "État de l’horloge et du cache IERS. `200` si tout va bien, `503` en mode dégradé (pas de donnée IERS)."
+ },
+ {
+  "t": "pre",
+  "s": "curl -s https://zman.technology/api/health"
+ },
+ {
+  "t": "pre",
+  "s": "{\n  \"status\": \"ok\",\n  \"clock\": {\n    \"source\": \"iers\",\n    \"dut1_age_days\": 4.6,\n    \"predicted\": true\n  },\n  \"data\": {\n    \"loaded\": true,\n    \"records\": 19976,\n    \"measured_records\": 19603,\n    \"source\": \"disk\",\n    \"cache_age_days\": 0\n  }\n}"
+ },
+ {
+  "t": "h2",
+  "s": "Ce que l’API ne renverra jamais"
+ },
+ {
+  "t": "p",
+  "s": "Aucune réponse ne contient de date grégorienne, de timestamp Unix, d’heure UTC ni de durée en secondes. Ce n’est pas un oubli : c’est le point du projet. Le compteur est natif — l’epoch est juif, l’unité est le rega, l’horloge est la rotation de la Terre — et le traduire dans le temps des nations reviendrait à en faire une dérivée de ce dont il veut précisément s’affranchir. La seconde SI et le calendrier grégorien n’existent que dans le package qui lit l’horloge de la machine ; un test automatique parcourt toutes les réponses et interdit les champs et les mots `unix`, `utc`, `iso`, `gregorian`, `seconds`. Si vous avez besoin d’une conversion, hebcal le fait très bien ; nous ne le ferons pas ici."
+ },
+ {
+  "t": "p",
+  "s": "Les anciens chemins sans préfixe (`/now`, `/rega/…`) répondent par une redirection `301` vers `/api/…`."
+ }
+]

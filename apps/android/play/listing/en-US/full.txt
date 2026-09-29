@@ -8,6 +8,14 @@ That is why Zman does not follow the atomic clock but UT1, the time scale that f
 • Hour · chelek · rega, live
 • The number of rega’im since the epoch, the molad Tohu
 • The state of the measurement: age of the IERS data, measured or predicted
+• The luach: each Hebrew month as a grid, Sunday to Shabbat, with its festivals, Rosh Chodesh and its molad
+• The festivals and fasts of the year, postponements included (fasts moved past Shabbat, Ta’anit Esther brought forward, Yom HaAtzmaut shifted), with a countdown to the next one
+• Israel or the diaspora: one or two days of yom tov
+• The counting of the omer, day by day
+• The molad: a countdown in days, hours, chalakim and rega’im to the next one, and the year’s moladot in the form announced in synagogue
+• The structure of the year: length, keviah, place in the nineteen-year cycle, length of each month
+• Reminders, scheduled on the device: Rosh Chodesh, festivals and fasts the evening before, the molad at the moment of the molad
+• The site’s texts (manifesto, method, API, privacy), readable in the app
 • A home screen widget, with the elapsed part of the hour
 • A Wear OS app, with a tile and watch face complications: the Hebrew date and the hour of the day on your wrist
 • In English, French and Hebrew

@@ -35,6 +35,26 @@ CAPTIONS = {
         "en": ("Set by the Earth’s rotation", "UT1 as measured by the IERS, not the atomic clock"),
         "he": ("מכוון לפי סיבוב כדור הארץ", "כפי שהוא נמדד, ולא לפי השעון האטומי"),
     },
+    "luach": {
+        "fr": ("Le luach, mois par mois", "Roch Hodech, fêtes, omer et molad du mois"),
+        "en": ("The luach, month by month", "Rosh Chodesh, festivals, Omer and the month’s molad"),
+        "he": ("הלוח, חודש אחר חודש", "ראש חודש, מועדים, ספירת העומר ומולד החודש"),
+    },
+    "fetes": {
+        "fr": ("Les fêtes et les jeûnes", "Reports compris, en Israël ou en diaspora"),
+        "en": ("Festivals and fasts", "Postponements included, in Israel or the diaspora"),
+        "he": ("מועדים ותעניות", "כולל הדחיות, בארץ ובחוץ לארץ"),
+    },
+    "molad": {
+        "fr": ("Le molad, au chelek près", "Compte à rebours, annonces et structure de l’année"),
+        "en": ("The molad, to the chelek", "Countdown, announcements and the year’s structure"),
+        "he": ("המולד, עד לחלק", "ספירה לאחור, הכרזות ומבנה השנה"),
+    },
+    "lire": {
+        "fr": ("Un temps de rotation", "Le manifeste et la méthode, avec leurs sources"),
+        "en": ("Rotation time", "The manifesto and the method, with their sources"),
+        "he": ("זמן של סיבוב", "המניפסט והשיטה, עם מקורותיהם"),
+    },
     "widgets": {
         "fr": ("La date hébraïque en un coup d’œil", "Widgets pour l’écran d’accueil et l’écran verrouillé"),
         "en": ("The Hebrew date at a glance", "Widgets for the home and lock screens"),

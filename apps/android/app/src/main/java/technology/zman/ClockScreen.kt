@@ -1,13 +1,6 @@
 package technology.zman
 
-import android.appwidget.AppWidgetManager
-import android.content.ComponentName
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
-import technology.zman.widget.ZmanWidgetReceiver
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,6 +23,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -56,6 +50,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
 import technology.zman.core.Calibration
 import technology.zman.core.Lang
+import technology.zman.core.Luach
+import technology.zman.core.Moadim
+import technology.zman.core.name
+import technology.zman.core.nameHe
 import technology.zman.core.Moment
 import technology.zman.core.Names
 import technology.zman.core.Rega
@@ -68,7 +66,7 @@ import kotlin.math.roundToInt
  * grégorienne ni heure civile.
  */
 @Composable
-fun ClockScreen(stateFlow: StateFlow<SyncState>, lang: Lang) {
+fun ClockScreen(stateFlow: StateFlow<SyncState>, settings: Settings, lang: Lang, open: (Page) -> Unit) {
     val p = LocalPalette.current
     val state by stateFlow.collectAsState()
     val clock = ZmanClock(state.calibration)
@@ -108,9 +106,9 @@ fun ClockScreen(stateFlow: StateFlow<SyncState>, lang: Lang) {
                 Spacer(Modifier.height(26.dp))
                 Quality(state, lang)
                 Spacer(Modifier.height(34.dp))
-                WhyLink(lang)
-                Spacer(Modifier.height(36.dp))
-                WidgetPromo()
+                Today(today, settings, lang)
+                Spacer(Modifier.height(30.dp))
+                WhyLink(open)
                 Spacer(Modifier.height(40.dp))
                 Note(lang)
             }
@@ -216,48 +214,37 @@ private fun qualityText(c: Calibration?, offline: Boolean): String = when {
     )
 }
 
+/** Ce que le jour porte (fêtes, Roch Hodech, omer), et la prochaine fête. */
 @Composable
-private fun WhyLink(lang: Lang) {
+private fun Today(m: Moment, settings: Settings, lang: Lang) {
     val p = LocalPalette.current
-    val uri = LocalUriHandler.current
-    val url = "${technology.zman.core.ZmanApi.BASE}/${lang.name.lowercase()}/manifeste"
-    ZText(
-        stringResource(R.string.why), 17.sp, p.ink,
-        modifier = Modifier.clickable(role = Role.Button) { uri.openUri(url) },
-        decoration = TextDecoration.Underline,
-    )
-}
-
-/**
- * Le widget n'est visible nulle part ailleurs : l'app le signale et, si le
- * lanceur le permet, propose de l'épingler directement.
- */
-@Composable
-private fun WidgetPromo() {
-    val p = LocalPalette.current
-    val context = LocalContext.current
-    val canPin = remember { AppWidgetManager.getInstance(context).isRequestPinAppWidgetSupported }
-    Column(Modifier.widthIn(max = 480.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-        SmallCaps(stringResource(R.string.widget_title), 15.sp, p.accent, tracking = 0.12.em)
-        Spacer(Modifier.height(8.dp))
-        ZText(stringResource(R.string.widget_hint), 15.sp, p.ink2)
-        Spacer(Modifier.height(14.dp))
-        if (canPin) {
+    val tr = Tr(lang)
+    Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        for (o in Moadim.on(m.day, settings.israel)) {
+            val y = Luach.dateOf(o.start)?.year ?: 0
             ZText(
-                stringResource(R.string.widget_add), 16.sp, p.accent,
-                modifier = Modifier
-                    .border(1.dp, p.accent, RoundedCornerShape(50))
-                    .clickable(role = Role.Button) {
-                        AppWidgetManager.getInstance(context).requestPinAppWidget(
-                            ComponentName(context, ZmanWidgetReceiver::class.java), null, null,
-                        )
-                    }
-                    .padding(horizontal = 20.dp, vertical = 8.dp),
+                if (lang == Lang.HE) o.nameHe(y) else "${o.name(lang, y)} · ${o.nameHe(y)}",
+                19.sp, p.accent, weight = FontWeight.Medium,
             )
-        } else {
-            ZText(stringResource(R.string.widget_manual), 14.sp, p.ink2)
+        }
+        Moadim.omer(m.day)?.let { ZText(tr.omer(it), 16.sp, p.accent) }
+        Moadim.next(m.day, settings.israel)?.let { next ->
+            val y = Luach.dateOf(next.start)!!.year
+            val name = if (lang == Lang.HE) next.nameHe(y) else next.name(lang, y)
+            ZText("$name, ${tr.days(next.start - m.day)}", 16.sp, p.ink2)
         }
     }
+}
+
+/** Le manifeste, lu dans l'app. */
+@Composable
+private fun WhyLink(open: (Page) -> Unit) {
+    val p = LocalPalette.current
+    ZText(
+        stringResource(R.string.why), 17.sp, p.ink,
+        modifier = Modifier.clickable(role = Role.Button) { open(Page.MANIFESTE) },
+        decoration = TextDecoration.Underline,
+    )
 }
 
 @Composable
@@ -294,6 +281,9 @@ fun ZText(
     italic: Boolean = false,
     rtl: Boolean = false,
     decoration: TextDecoration? = null,
+    align: TextAlign = TextAlign.Center,
+    tnum: Boolean = false,
+    maxLines: Int = Int.MAX_VALUE,
 ) {
     val content = @Composable {
         BasicText(
@@ -302,9 +292,11 @@ fun ZText(
             style = TextStyle(
                 fontFamily = Garamond, fontSize = size, color = color, fontWeight = weight,
                 fontStyle = if (italic) FontStyle.Italic else FontStyle.Normal,
-                textAlign = TextAlign.Center, textDecoration = decoration,
+                textAlign = align, textDecoration = decoration,
                 lineHeight = size * 1.35f,
+                fontFeatureSettings = if (tnum) "tnum, lnum" else null,
             ),
+            maxLines = maxLines,
         )
     }
     if (rtl) CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl, content) else content()
@@ -312,21 +304,29 @@ fun ZText(
 
 /** Petites capitales synthétisées (les sous-ensembles n'ont pas `smcp`) ; l'hébreu reste tel quel. */
 @Composable
-fun SmallCaps(text: String, size: TextUnit, color: Color, tracking: TextUnit = 0.1.em) {
+fun SmallCaps(
+    text: String,
+    size: TextUnit,
+    color: Color,
+    tracking: TextUnit = 0.1.em,
+    modifier: Modifier = Modifier,
+    align: TextAlign = TextAlign.Center,
+) {
     if (text.any { isHebrew(it) }) {
-        ZText(text, size * 1.05f, color)
+        ZText(text, size * 1.05f, color, modifier = modifier, align = align)
     } else {
         BasicText(
             text.uppercase(),
+            modifier = modifier,
             style = TextStyle(
                 fontFamily = Garamond, fontWeight = FontWeight.Medium, fontSize = size * 0.78f,
-                color = color, letterSpacing = tracking, textAlign = TextAlign.Center,
+                color = color, letterSpacing = tracking, textAlign = align,
             ),
         )
     }
 }
 
-private fun isHebrew(c: Char) = c in '֐'..'׿'
+internal fun isHebrew(c: Char) = c in '֐'..'׿'
 
 fun scripted(text: String): AnnotatedString = buildAnnotatedString {
     var i = 0

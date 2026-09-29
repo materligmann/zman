@@ -1,0 +1,161 @@
+[
+ {
+  "t": "h1",
+  "s": "Méthode"
+ },
+ {
+  "t": "lede",
+  "s": "Comment le compteur est calculé, ce qui est vérifié, et ce qui reste à faire."
+ },
+ {
+  "t": "h2",
+  "s": "L’unité et l’epoch"
+ },
+ {
+  "t": "p",
+  "s": "Le compteur fondamental est un entier signé sur 64 bits : le nombre de rega’im écoulés depuis l’epoch. Les constantes structurelles sont posées par définition et ne dépendent d’aucune mesure :"
+ },
+ {
+  "t": "table",
+  "rows": [
+   [
+    "Unité",
+    "Valeur",
+    "Source"
+   ],
+   [
+    "1 heure",
+    "1 080 chalakim",
+    "Rambam, Hilkhot Kiddoush ha-Hodesh 6:2"
+   ],
+   [
+    "1 chelek",
+    "76 rega’im",
+    "ibid. 10:1"
+   ],
+   [
+    "1 jour",
+    "24 heures = 25 920 chalakim = 1 969 920 rega’im",
+    "par définition"
+   ],
+   [
+    "Début du jour",
+    "18:00",
+    "temps moyen de Jérusalem, convention du calendrier fixe"
+   ]
+  ]
+ },
+ {
+  "t": "p",
+  "s": "L’epoch (rega 0) est le samedi soir 18:00 qui ouvre la semaine du molad Tohou. Le jour 0 est ce dimanche ; le jour 1 est le lundi, qui est aussi le 1 Tichri de l’an 1. Le molad Tohou, ב״ד ר״ד, tombe au jour 2 de la semaine (lundi), 5 heures, 204 chalakim, soit :"
+ },
+ {
+  "t": "pre",
+  "s": "1 × 25 920 + 5 × 1 080 + 204 = 31 524 chalakim\n31 524 × 76                  = 2 395 824 rega’im"
+ },
+ {
+  "t": "p",
+  "s": "Ce point est vérifié par un test unitaire, ainsi que l’identité « jour 1 = 1 Tichri 1 = lundi ». Le numéro de jour `d` est lié au *fixed date* de Reingold et Dershowitz par `RD = d − 1 373 428` ; c’est cette relation qui calibre le pont vers l’horloge de la machine, et elle est vérifiée par des tests croisés sur des instants connus."
+ },
+ {
+  "t": "h2",
+  "s": "Le calendrier fixe"
+ },
+ {
+  "t": "p",
+  "s": "Le calendrier est implémenté sans bibliothèque externe, à partir des règles classiques. Le molad de Tichri d’une année N est le molad Tohou plus ⌊(235 N − 234) / 19⌋ lunaisons moyennes de 29 jours 12 heures 793 chalakim. Le 1 Tichri en découle après application des quatre דחיות, dans cet ordre :"
+ },
+ {
+  "t": "table",
+  "rows": [
+   [
+    "Dehiya",
+    "Condition",
+    "Effet"
+   ],
+   [
+    "מולד זקן",
+    "molad à 18 heures ou plus",
+    "reporté au lendemain"
+   ],
+   [
+    "גטר״ד",
+    "année commune, molad un mardi à 9 h 204 ch ou plus",
+    "reporté (au jeudi, via la règle suivante)"
+   ],
+   [
+    "בט״ו תקפ״ט",
+    "année suivant une embolismique, molad un lundi à 15 h 589 ch ou plus",
+    "reporté au mardi"
+   ],
+   [
+    "לא אד״ו ראש",
+    "résultat un dimanche, mercredi ou vendredi",
+    "reporté au lendemain"
+   ]
+  ]
+ },
+ {
+  "t": "p",
+  "s": "La longueur de l’année est la différence entre deux Roch Hachana consécutifs ; Hechvan et Kislev absorbent la variation (353, 354, 355 jours ; 383, 384, 385 pour les années embolismiques, années 3, 6, 8, 11, 14, 17 et 19 du cycle). Les mois sont numérotés selon la convention biblique : Nissan = 1 … Adar = 12, Adar II = 13."
+ },
+ {
+  "t": "h2",
+  "s": "La chaîne de mesure"
+ },
+ {
+  "t": "p",
+  "s": "En détail :"
+ },
+ {
+  "t": "ol",
+  "items": [
+   "Le serveur lit l’horloge de la machine, en UTC, synchronisée par NTP.",
+   "Il calcule la date julienne modifiée de l’instant et interpole linéairement UT1−UTC (DUT1) entre les deux lignes voisines du fichier `finals2000A.all` de l’IERS. Un saut de seconde intercalaire entre deux lignes n’est pas interpolé : on prend la valeur du côté le plus proche.",
+   "UT1 = UTC + DUT1. C’est la rotation réelle de la Terre, à la précision des mesures (quelques dizaines de microsecondes pour les valeurs finales, quelques millisecondes pour les prédictions à un mois).",
+   "Le temps moyen de Jérusalem est UT1 décalé de la longitude, 35,2137° E, soit + 8 451,288 s. Pas de fuseau, pas d’heure d’été.",
+   "La durée écoulée depuis l’epoch est convertie en rega’im par arithmétique entière : rega = ⌊nanosecondes × 1 969 920 / 86 400 × 10⁹⌋. Le calcul utilise des entiers de précision arbitraire ; aucun flottant n’intervient dans le résultat."
+  ]
+ },
+ {
+  "t": "p",
+  "s": "À partir de là, tout est entier : division par 1 969 920 pour le jour, par 82 080 pour l’heure, par 76 pour le chelek."
+ },
+ {
+  "t": "h2",
+  "s": "Les prédictions"
+ },
+ {
+  "t": "p",
+  "s": "L’IERS publie des valeurs mesurées avec quelques jours de retard, puis un an de prédictions marquées `P`. Quand l’instant courant dépasse la dernière mesure, le serveur utilise la prédiction et le dit : le champ `clock.predicted` passe à `true` et `clock.dut1_age_days` donne l’âge de la dernière mesure. Au-delà de la dernière ligne du fichier, la dernière valeur connue est conservée. Le fichier est rechargé chaque semaine ; s’il est inaccessible, le cache disque, puis le cache partagé, servent de secours. Si aucune donnée n’est disponible au démarrage, le serveur fonctionne en mode `fallback` avec DUT1 = 0 — une erreur inférieure à une seconde, soit une vingtaine de rega’im — et l’annonce dans chaque réponse."
+ },
+ {
+  "t": "h2",
+  "s": "Ce qui est vérifié"
+ },
+ {
+  "t": "ul",
+  "items": [
+   "Molad Tohou = jour 2, 5 h, 204 ch = 31 524 chalakim = 2 395 824 rega’im ; molad Tichri 5786 = lundi, 18 h, 187 ch (soit « 12:10 et 7 chalakim » dans la convention des annonces).",
+   "Aller-retour date ↔ jour sur deux siècles de jours consécutifs, avec continuité des mois.",
+   "Longueur de chaque année de 1 à 10 000 dans {353, 354, 355, 383, 384, 385}, cohérente avec la somme des mois et avec le caractère embolismique.",
+   "Roch Hachana jamais un dimanche, un mercredi ni un vendredi, sur dix mille ans.",
+   "Dates de référence vérifiées contre hebcal : 1 Tichri 5782 à 5787, Pessah 5784 à 5786, Kippour 5786, longueurs des années 5782 à 5787.",
+   "Pont horloge : la frontière exacte 18:00 temps moyen de Jérusalem, des instants connus qui tombent sur les bonnes dates, 1 heure = 82 080 rega’im, monotonie.",
+   "Parsing IERS sur un extrait réel du fichier, interpolation, seconde intercalaire, cache disque et cache partagé avec réseau simulé en panne.",
+   "API : chaque endpoint, JSON et texte, redirections, limite de débit, et un test qui parcourt toutes les réponses pour y interdire les mots `unix`, `utc`, `iso`, `gregorian`, `seconds`."
+  ]
+ },
+ {
+  "t": "h2",
+  "s": "Ce qui n’est pas encore fait"
+ },
+ {
+  "t": "p",
+  "s": "Le serveur ne mesure pas la rotation terrestre ; il la lit chez l’IERS. Le capteur local prévu — gnomon et caméra le jour, résolution astrométrique du ciel la nuit — n’existe pas encore. L’interface `Clock` (`Now() rega.Rega`, `Quality()`) est le point de remplacement ; rien dans l’API n’en dépend. Le serveur ne fait ni fêtes, ni zmanim par lieu, ni lectures : pour cela, hebcal et KosherJava existent et sont excellents."
+ },
+ {
+  "t": "p",
+  "s": "Le code est public : [https://github.com/materligmann/zman](https://github.com/materligmann/zman)."
+ }
+]

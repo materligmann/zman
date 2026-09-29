@@ -1,0 +1,46 @@
+[
+ {
+  "t": "h1",
+  "s": "Privacy"
+ },
+ {
+  "t": "lede",
+  "s": "zman asks nothing of you and keeps nothing about you. This page covers the website, the API and the iPhone and Android apps."
+ },
+ {
+  "t": "h2",
+  "s": "What does not exist"
+ },
+ {
+  "t": "p",
+  "s": "No account, no sign-up, no advertising, no analytics, no trackers, no third-party SDKs. The apps ask for neither location nor contacts. The iPhone app offers reminders (Rosh Chodesh, festivals, molad): only if you turn them on does it ask for permission to send notifications, and it schedules them on the device itself; no server is involved."
+ },
+ {
+  "t": "h2",
+  "s": "What travels"
+ },
+ {
+  "t": "p",
+  "s": "To stay in step with the Earth’s rotation, the website and the apps regularly query `https://zman.technology/api/now`. Like any request on the Internet, it carries the device’s IP address. The server uses it only to rate-limit per address; it does not store it in any database. The host (Google Cloud Run, europe-west1 region) keeps technical request logs under its standard retention policy, which zman does not use."
+ },
+ {
+  "t": "p",
+  "s": "The request carries no identifier: no account, no advertising identifier, no device identifier."
+ },
+ {
+  "t": "h2",
+  "s": "What stays on the device"
+ },
+ {
+  "t": "p",
+  "s": "The apps keep the last measured correction on the device (an offset in rega’im and the age of the IERS data), so they keep working offline and the widget can use it. None of it leaves the device. On the website, a `lang` cookie remembers the chosen language, and nothing else."
+ },
+ {
+  "t": "h2",
+  "s": "Contact"
+ },
+ {
+  "t": "p",
+  "s": "Any question: [hello@100-8.studio](mailto:hello@100-8.studio)."
+ }
+]

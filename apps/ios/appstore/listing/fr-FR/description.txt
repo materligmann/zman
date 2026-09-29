@@ -4,12 +4,16 @@ Le jour commence à 18 heures, temps moyen de Jérusalem. Il compte 24 heures ; 
 
 C’est pourquoi Zman ne suit pas l’horloge atomique mais UT1, l’échelle de temps qui suit la rotation terrestre telle que mesurée par l’IERS. L’app compte les rega’im sur votre téléphone et se recale régulièrement sur le serveur zman.technology, qui applique la correction mesurée. Hors ligne, elle continue avec la dernière correction connue.
 
-• La date hébraïque en lettres et en chiffres, le jour de la semaine
-• Heure · chelek · rega, en direct
-• Le nombre de rega’im écoulés depuis l’epoch, le molad Tohou
+• L’horloge : la date hébraïque en lettres et en chiffres, le jour de la semaine, heure · chelek · rega en direct, et le nombre de rega’im depuis le molad Tohou
+• Le luach : chaque mois hébreu en grille, de dimanche à Chabbat, avec Roch Hodech, les fêtes, le compte de l’omer et le molad du mois
+• Les fêtes et les jeûnes de l’année, reports compris (jeûnes repoussés après Chabbat, Ta’anit Esther avancé, Yom HaAtsmaout), en Israël ou en diaspora, avec le compte à rebours jusqu’à la prochaine en jours, heures et chalakim
+• Le molad : compte à rebours jusqu’au prochain, et tous les moladot de l’année au format des annonces de Birkat ha-Hodech
+• La structure de l’année : longueur, année commune ou embolismique, keviah, place dans le cycle de dix-neuf ans
+• Des rappels, si vous le voulez : la veille de Roch Hodech et des fêtes, et à l’instant du molad, programmés sur l’appareil
+• Le manifeste, la méthode et leurs sources, à lire dans l’app
 • L’état de la mesure : fraîcheur de la donnée IERS, mesurée ou prédite
-• Un widget pour l’écran d’accueil, avec la part écoulée de l’heure
-• Une app Apple Watch, et des complications pour le cadran : date hébraïque et heure du jour au poignet
+• Un widget pour l’écran d’accueil et l’écran verrouillé, avec la part écoulée de l’heure
+• Une app Apple Watch, et des complications pour le cadran
 • En français, en anglais et en hébreu
 
 Le calendrier est calculé par les règles du calendrier fixe (molad, dehiyot), vérifiées par des tests. Méthode et sources : zman.technology/methode.

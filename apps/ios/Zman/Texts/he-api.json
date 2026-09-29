@@ -1,0 +1,217 @@
+[
+ {
+  "t": "h1",
+  "s": "ה־API"
+ },
+ {
+  "t": "lede",
+  "s": "חותמת זמן יהודית עצמאית, ב־JSON או בטקסט. חינם, ללא מפתח, ללא לוח גרגוריאני."
+ },
+ {
+  "t": "h2",
+  "s": "עקרונות"
+ },
+ {
+  "t": "ul",
+  "items": [
+   "בסיס: `/api/`. תשובות ב־JSON; שלחו `Accept: text/plain` או הוסיפו `?format=text` לקבלת טקסט.",
+   "ללא מפתח, ללא הרשמה. CORS פתוח (`Access-Control-Allow-Origin: *`).",
+   "הגבלת קצב לכל כתובת: 20 בקשות ליחידת קצב, פרץ של 60; מעבר לכך, `429` עם `Retry-After`.",
+   "`Cache-Control: max-age=1` על `/api/now`; יום אחד על תשובות חשבוניות טהורות.",
+   "הקוד ברישיון MIT. תשובות ה־API ברישיון [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.he): שימוש חופשי עם ייחוס ל־\"zman, zman.technology\"."
+  ]
+ },
+ {
+  "t": "h2",
+  "s": "יחידות וקבועים"
+ },
+ {
+  "t": "table",
+  "rows": [
+   [
+    "שם",
+    "ערך",
+    "הערה"
+   ],
+   [
+    "רגעים בחלק",
+    "76",
+    "רמב\"ם, הלכות קידוש החודש י, א"
+   ],
+   [
+    "חלקים בשעה",
+    "1,080",
+    "שם, ו, ב"
+   ],
+   [
+    "שעות ביום",
+    "24",
+    "מ־18:00 זמן ירושלים הממוצע"
+   ],
+   [
+    "רגעים בשעה",
+    "82,080",
+    ""
+   ],
+   [
+    "חלקים ביום",
+    "25,920",
+    ""
+   ],
+   [
+    "רגעים ביום",
+    "1,969,920",
+    "תמיד, יהא אורך היום אשר יהא"
+   ],
+   [
+    "ראשית המניין",
+    "רגע 0",
+    "מוצאי שבת 18:00 הפותח את שבוע מולד תוהו; יום 0 = יום ראשון"
+   ],
+   [
+    "מולד תוהו",
+    "2,395,824",
+    "יום 1, 5 שעות, 204 חלקים"
+   ],
+   [
+    "א' בתשרי שנת א",
+    "יום 1",
+    "יום שני"
+   ],
+   [
+    "חודשים",
+    "1 – 13",
+    "ניסן = 1 … אדר = 12 (אדר א׳ בשנה מעוברת), אדר ב׳ = 13"
+   ],
+   [
+    "יום בשבוע",
+    "0 – 6",
+    "יום ראשון = 0, שבת = 6"
+   ]
+  ]
+ },
+ {
+  "t": "h2",
+  "s": "נקודות קצה"
+ },
+ {
+  "t": "h3",
+  "s": "`GET /api/now`"
+ },
+ {
+  "t": "p",
+  "s": "הרגע הנוכחי: רגע, יום, שעה, חלק, רגע בתוך החלק, תאריך, יום בשבוע, ואיכות השעון (`source`: ‏`iers` או `fallback`; ‏`dut1_age_days`: גיל המדידה האחרונה; `predicted`: ערך DUT1 הוא תחזית)."
+ },
+ {
+  "t": "pre",
+  "s": "curl -s https://zman.technology/api/now"
+ },
+ {
+  "t": "pre",
+  "s": "{\n  \"rega\": 4163021922875,\n  \"day\": 2113294,\n  \"hour\": 22,\n  \"chelek\": 8,\n  \"rega_in_chelek\": 27,\n  \"date\": {\n    \"year\": 5786,\n    \"month\": 6,\n    \"month_name\": \"Elul\",\n    \"month_name_he\": \"אלול\",\n    \"day\": 25\n  },\n  \"weekday\": 1,\n  \"weekday_name_he\": \"יום שני\",\n  \"clock\": {\n    \"source\": \"iers\",\n    \"dut1_age_days\": 4.6,\n    \"predicted\": true\n  }\n}"
+ },
+ {
+  "t": "p",
+  "s": "כטקסט:"
+ },
+ {
+  "t": "pre",
+  "s": "curl -s -H 'Accept: text/plain' https://zman.technology/api/now"
+ },
+ {
+  "t": "pre",
+  "s": "rega     4163021922875\nday      2113294  hour 22  chelek 8  rega 27\ndate     25 Elul 5786 (אלול)\nweekday  1 יום שני\nclock    source=iers dut1_age_days=4.6 predicted=true"
+ },
+ {
+  "t": "h3",
+  "s": "`GET /api/rega/{n}`"
+ },
+ {
+  "t": "p",
+  "s": "מפענח מספר שלם ליום, שעה, חלק, רגע, תאריך ויום בשבוע. ליום שלפני א' בתשרי שנת א, `date` הוא `null`. דוגמה: מולד תוהו."
+ },
+ {
+  "t": "pre",
+  "s": "curl -s https://zman.technology/api/rega/2395824"
+ },
+ {
+  "t": "pre",
+  "s": "{\n  \"rega\": 2395824,\n  \"day\": 1,\n  \"hour\": 5,\n  \"chelek\": 204,\n  \"rega_in_chelek\": 0,\n  \"date\": {\n    \"year\": 1,\n    \"month\": 7,\n    \"month_name\": \"Tishrei\",\n    \"month_name_he\": \"תשרי\",\n    \"day\": 1\n  },\n  \"weekday\": 1,\n  \"weekday_name_he\": \"יום שני\"\n}"
+ },
+ {
+  "t": "h3",
+  "s": "`GET /api/date/{year}/{month}/{day}`"
+ },
+ {
+  "t": "p",
+  "s": "היום הנתון, עם הרגע הראשון שלו (`start`) והרגע הראשון של היום שאחריו (`end`, לא כולל). שגיאה `400` אם התאריך אינו קיים (ל' בחשון בשנה חסרה, אדר ב׳ בשנה פשוטה, וכדומה)."
+ },
+ {
+  "t": "pre",
+  "s": "curl -s https://zman.technology/api/date/5787/7/1"
+ },
+ {
+  "t": "pre",
+  "s": "{\n  \"date\": {\n    \"year\": 5787,\n    \"month\": 7,\n    \"month_name\": \"Tishrei\",\n    \"month_name_he\": \"תשרי\",\n    \"day\": 1\n  },\n  \"day\": 2113299,\n  \"weekday\": 6,\n  \"weekday_name_he\": \"שבת\",\n  \"start\": 4163029966080,\n  \"end\": 4163031936000\n}"
+ },
+ {
+  "t": "h3",
+  "s": "`GET /api/molad/{year}/{month}`"
+ },
+ {
+  "t": "p",
+  "s": "המולד הממוצע של החודש, ברגעים ובחלקים. המוסכמה היא זו של ההכרזות: שעות נספרות מ־18:00 בערב הקודם. \"ליל שבת 20:59 וחלק אחד\" מופיע אפוא כיום בשבוע 6 (היום ההלכתי כבר החל), 2 שעות, 1,063 חלקים."
+ },
+ {
+  "t": "pre",
+  "s": "curl -s https://zman.technology/api/molad/5787/7"
+ },
+ {
+  "t": "pre",
+  "s": "{\n  \"rega\": 4163030211028,\n  \"day\": 2113299,\n  \"hour\": 2,\n  \"chelek\": 1063,\n  \"rega_in_chelek\": 0,\n  \"date\": {\n    \"year\": 5787,\n    \"month\": 7,\n    \"month_name\": \"Tishrei\",\n    \"month_name_he\": \"תשרי\",\n    \"day\": 1\n  },\n  \"weekday\": 6,\n  \"weekday_name_he\": \"שבת\"\n}"
+ },
+ {
+  "t": "h3",
+  "s": "`GET /api/year/{year}`"
+ },
+ {
+  "t": "p",
+  "s": "אורך השנה, האם היא מעוברת, ראש השנה, והחודשים בסדר האזרחי עם אורכם ויומם הראשון."
+ },
+ {
+  "t": "pre",
+  "s": "curl -s https://zman.technology/api/year/5787"
+ },
+ {
+  "t": "pre",
+  "s": "{\n  \"year\": 5787,\n  \"length\": 385,\n  \"leap\": true,\n  \"rosh_hashana\": {\n    \"day\": 2113299,\n    \"weekday\": 6,\n    \"weekday_name_he\": \"שבת\"\n  },\n  \"months\": [\n    {\n      \"month\": 7,\n      \"name\": \"Tishrei\",\n      \"name_he\": \"תשרי\",\n      \"length\": 30,\n      \"start_day\": 2113299\n    },\n    {\n      \"month\": 8,\n      \"name\": \"Cheshvan\",\n      \"name_he\": \"חשון\",\n      \"length\": 30,\n      \"start_day\": 2113329\n    },\n    {\n      \"month\": 9,\n      \"name\": \"Kislev\",\n      \"name_he\": \"כסלו\",\n      \"length\": 30,\n      \"start_day\": 2113359\n    },\n    {\n      \"month\": 10,\n      \"name\": \"Tevet\",\n      \"name_he\": \"טבת\",\n      \"length\": 29,\n      \"start_day\": 2113389\n    },\n    {\n      \"month\": 11,\n      \"name\": \"Shevat\",\n      \"name_he\": \"שבט\",\n      \"length\": 30,\n      \"start_day\": 2113418\n    },\n    {\n      \"month\": 12,\n      \"name\": \"Adar I\",\n      \"name_he\": \"אדר א׳\",\n      \"length\": 30,\n      \"start_day\": 2113448\n    },\n    {\n      \"month\": 13,\n      \"name\": \"Adar II\",\n      \"name_he\": \"אדר ב׳\",\n      \"length\": 29,\n      \"start_day\": 2113478\n    },\n    {\n      \"month\": 1,\n      \"name\": \"Nissan\",\n      \"name_he\": \"ניסן\",\n      \"length\": 30,\n      \"start_day\": 2113507\n    },\n    {\n      \"month\": 2,\n      \"name\": \"Iyar\",\n      \"name_he\": \"אייר\",\n      \"length\": 29,\n      \"start_day\": 2113537\n    },\n    {\n      \"month\": 3,\n      \"name\": \"Sivan\",\n      \"name_he\": \"סיון\",\n      \"length\": 30,\n      \"start_day\": 2113566\n    },\n    {\n      \"month\": 4,\n      \"name\": \"Tammuz\",\n      \"name_he\": \"תמוז\",\n      \"length\": 29,\n      \"start_day\": 2113596\n    },\n    {\n      \"month\": 5,\n      \"name\": \"Av\",\n      \"name_he\": \"אב\",\n      \"length\": 30,\n      \"start_day\": 2113625\n    },\n    {\n      \"month\": 6,\n      \"name\": \"Elul\",\n      \"name_he\": \"אלול\",\n      \"length\": 29,\n      \"start_day\": 2113655\n    }\n  ]\n}"
+ },
+ {
+  "t": "h3",
+  "s": "`GET /api/health`"
+ },
+ {
+  "t": "p",
+  "s": "מצב השעון ומטמון ה־IERS. ‏`200` כשהכול תקין, `503` במצב מנוון (ללא נתוני IERS)."
+ },
+ {
+  "t": "pre",
+  "s": "curl -s https://zman.technology/api/health"
+ },
+ {
+  "t": "pre",
+  "s": "{\n  \"status\": \"ok\",\n  \"clock\": {\n    \"source\": \"iers\",\n    \"dut1_age_days\": 4.6,\n    \"predicted\": true\n  },\n  \"data\": {\n    \"loaded\": true,\n    \"records\": 19976,\n    \"measured_records\": 19603,\n    \"source\": \"disk\",\n    \"cache_age_days\": 0\n  }\n}"
+ },
+ {
+  "t": "h2",
+  "s": "מה ה־API לעולם לא יחזיר"
+ },
+ {
+  "t": "p",
+  "s": "שום תשובה אינה מכילה תאריך גרגוריאני, חותמת זמן של Unix, שעת UTC או משך בשניות. זו אינה השמטה: זו הנקודה של הפרויקט. המונה הוא מקורי — ראשית המניין יהודית, היחידה היא הרגע, השעון הוא סיבוב כדור הארץ — ותרגומו לזמן האומות יהפוך אותו לנגזרת של בדיוק מה שהוא מבקש להשתחרר ממנו. השנייה של SI והלוח הגרגוריאני קיימים רק בחבילה הקוראת את שעון המחשב; בדיקה אוטומטית עוברת על כל התשובות ואוסרת את השדות והמילים `unix`, `utc`, `iso`, `gregorian`, `seconds`. אם אתם זקוקים להמרה, hebcal עושה זאת היטב; כאן לא נעשה זאת."
+ },
+ {
+  "t": "p",
+  "s": "הנתיבים הישנים ללא קידומת (`/now`, `/rega/…`) עונים בהפניה `301` אל `/api/…`."
+ }
+]

@@ -353,7 +353,18 @@ async function release(args) {
       },
     });
   }
-  if (sub.attributes.state === "READY_FOR_REVIEW") {
+  // Après un refus : marquer l'élément rejeté comme résolu, puis renvoyer.
+  if (sub.attributes.state === "UNRESOLVED_ISSUES") {
+    for (const it of items.filter((i) => i.attributes.state === "REJECTED")) {
+      await api("PATCH", `/reviewSubmissionItems/${it.id}`, {
+        data: { type: "reviewSubmissionItems", id: it.id, attributes: { resolved: true } },
+      });
+    }
+    await api("PATCH", `/reviewSubmissions/${sub.id}`, {
+      data: { type: "reviewSubmissions", id: sub.id, attributes: { submitted: true } },
+    });
+    console.log(`✓ Zman ${version} resoumise à l'examen d'Apple.`);
+  } else if (sub.attributes.state === "READY_FOR_REVIEW") {
     await api("PATCH", `/reviewSubmissions/${sub.id}`, {
       data: { type: "reviewSubmissions", id: sub.id, attributes: { submitted: true } },
     });

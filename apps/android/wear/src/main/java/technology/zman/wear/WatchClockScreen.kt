@@ -37,6 +37,8 @@ import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
+import androidx.wear.compose.material.PositionIndicator
+import androidx.wear.compose.material.Scaffold
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
 import technology.zman.core.Lang
@@ -63,18 +65,26 @@ fun WatchClockScreen(stateFlow: StateFlow<SyncState>, lang: Lang) {
     val direction = if (lang.isRtl) LayoutDirection.Rtl else LayoutDirection.Ltr
     val context = LocalContext.current
 
+    val listState = rememberScalingLazyListState(initialCenterItemIndex = 0)
+
+    // Le Scaffold affiche la barre de défilement quand on fait défiler (au doigt ou à la couronne).
     CompositionLocalProvider(LocalLayoutDirection provides direction) {
-        ScalingLazyColumn(
-            modifier = Modifier.fillMaxSize().background(Wear.paper),
-            state = rememberScalingLazyListState(initialCenterItemIndex = 0),
-            // La date en haut à l'ouverture, pas centrée : tout tient sur un grand écran rond.
-            autoCentering = null,
-            contentPadding = PaddingValues(top = 34.dp, bottom = 48.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+        Scaffold(
+            modifier = Modifier.background(Wear.paper),
+            positionIndicator = { PositionIndicator(scalingLazyListState = listState) },
         ) {
-            item { DateBlock(today, lang) }
-            item { TimeRow(tick, context.getString(R.string.hour), context.getString(R.string.chelek), context.getString(R.string.rega), state.calibration != null) }
-            item { Quality(context.quality(state.calibration, state.offline), ok = state.calibration != null && !state.offline) }
+            ScalingLazyColumn(
+                modifier = Modifier.fillMaxSize().background(Wear.paper),
+                state = listState,
+                // La date en haut à l'ouverture, pas centrée : tout tient sur un grand écran rond.
+                autoCentering = null,
+                contentPadding = PaddingValues(top = 34.dp, bottom = 48.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                item { DateBlock(today, lang) }
+                item { TimeRow(tick, context.getString(R.string.hour), context.getString(R.string.chelek), context.getString(R.string.rega), state.calibration != null) }
+                item { Quality(context.quality(state.calibration, state.offline), ok = state.calibration != null && !state.offline) }
+            }
         }
     }
 }

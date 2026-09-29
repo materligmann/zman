@@ -1,0 +1,46 @@
+[
+ {
+  "t": "h1",
+  "s": "Confidentialité"
+ },
+ {
+  "t": "lede",
+  "s": "zman ne vous demande rien et ne garde rien de vous. Cette page vaut pour le site, l’API et les apps iPhone et Android."
+ },
+ {
+  "t": "h2",
+  "s": "Ce qui n’existe pas"
+ },
+ {
+  "t": "p",
+  "s": "Pas de compte, pas d’inscription, pas de publicité, pas de mesure d’audience, pas de pisteur, pas de SDK tiers. Les apps ne demandent ni position ni contacts. L’app iPhone propose des rappels (Roch Hodech, fêtes, molad) : seulement si vous les activez, elle demande l’autorisation d’envoyer des notifications, et les programme sur l’appareil lui-même ; aucun serveur n’intervient."
+ },
+ {
+  "t": "h2",
+  "s": "Ce qui circule"
+ },
+ {
+  "t": "p",
+  "s": "Pour se recaler sur la rotation de la Terre, le site et les apps interrogent régulièrement `https://zman.technology/api/now`. Comme toute requête sur Internet, celle-ci porte l’adresse IP de l’appareil. Le serveur s’en sert seulement pour limiter le débit par adresse ; il ne l’enregistre dans aucune base. L’hébergeur (Google Cloud Run, région europe-west1) tient des journaux techniques des requêtes, conservés selon sa politique standard, que zman n’exploite pas."
+ },
+ {
+  "t": "p",
+  "s": "La requête ne contient aucun identifiant : ni compte, ni identifiant publicitaire, ni identifiant d’appareil."
+ },
+ {
+  "t": "h2",
+  "s": "Ce qui reste sur l’appareil"
+ },
+ {
+  "t": "p",
+  "s": "Les apps gardent sur l’appareil la dernière correction mesurée (un écart en rega’im et la fraîcheur de la donnée IERS), pour continuer à fonctionner hors ligne et pour que le widget l’utilise. Rien de cela ne quitte l’appareil. Sur le site, un cookie `lang` retient la langue choisie, et rien d’autre."
+ },
+ {
+  "t": "h2",
+  "s": "Contact"
+ },
+ {
+  "t": "p",
+  "s": "Pour toute question : [hello@100-8.studio](mailto:hello@100-8.studio)."
+ }
+]

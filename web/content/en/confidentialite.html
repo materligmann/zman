@@ -3,7 +3,7 @@
 <p class="lede">zman asks nothing of you and keeps nothing about you. This page covers the website, the API and the iPhone and Android apps.</p>
 
 <h2>What does not exist</h2>
-<p>No account, no sign-up, no advertising, no analytics, no trackers, no third-party SDKs. The apps request no permissions: no location, no contacts, no notifications.</p>
+<p>No account, no sign-up, no advertising, no analytics, no trackers, no third-party SDKs. The apps ask for neither location nor contacts. The iPhone app offers reminders (Rosh Chodesh, festivals, molad): only if you turn them on does it ask for permission to send notifications, and it schedules them on the device itself; no server is involved.</p>
 
 <h2>What travels</h2>
 <p>To stay in step with the Earth’s rotation, the website and the apps regularly query <code>https://zman.technology/api/now</code>. Like any request on the Internet, it carries the device’s IP address. The server uses it only to rate-limit per address; it does not store it in any database. The host (Google Cloud Run, europe-west1 region) keeps technical request logs under its standard retention policy, which zman does not use.</p>

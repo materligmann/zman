@@ -1,8 +1,14 @@
-Zman shows the current moment in the traditional Jewish time system (Hebrew date, hour, chelek, rega), computed on the device and periodically synchronised with our public server https://zman.technology/api/now, which follows the Earth's rotation (UT1, from IERS data).
+Thank you for the review of build 1.0 (3). Following the Guideline 4.2 feedback, this build (1.0 (4)) adds substantial native functionality; everything is computed on the device and works offline.
 
-No account, no login, no in-app purchase, no permissions requested. All features are available immediately.
+The app now has five tabs:
+1. Clock — the present moment in traditional Jewish time (Hebrew date, hour, chelek, rega), synchronised with our public server https://zman.technology/api/now, which follows the Earth's rotation (UT1, IERS data). It also shows today's festival, the Omer count and the next festival.
+2. Luach — a full Hebrew calendar: month grid (Sunday to Shabbat) with Rosh Chodesh, festivals and fasts; tap any day for its details; navigate across months and years; the month's molad.
+3. Festivals — every festival and fast of the year with the traditional postponement rules, for Israel or the diaspora (setting in the More tab), and a live countdown to the next one.
+4. Molad — live countdown to the next new moon, all moladot of the year in the traditional announcement format, and the structure of the year (length, leap year, keviah, place in the 19-year cycle).
+5. More — optional reminders (Rosh Chodesh, festivals and fasts, molad) delivered as local notifications scheduled on the device; the Israel/diaspora setting; and the project's texts (manifesto, method, API, privacy) rendered natively in the app.
 
-The app includes a home screen / lock screen widget (Zman): long-press the home screen, tap "+" or "Edit", search "Zman".
-The Apple Watch app installs with the iPhone app. Its complications (Zman) are added from the watch face editor: long-press the watch face, Edit, Complications.
+Notification permission is only requested when the user turns a reminder on in the More tab. No account, no login, no in-app purchase, no data collected.
 
-The interface follows the device language (French, English or Hebrew). Method and sources: https://zman.technology/en/methode
+The app also includes a Home Screen / Lock Screen widget (long-press the Home Screen, tap Edit › Add Widget, search "Zman") and an Apple Watch app with complications (installed with the iPhone app; complications are added by editing the watch face).
+
+The interface follows the device language (French, English or Hebrew).
